@@ -11,16 +11,18 @@
           <div class="text-2xl font-bold text-gray-900 dark:text-white">
             {{ $t("nav.title") }}
           </div>
-          <div class="flex gap-4 items-center">
+          
+          <!-- Navigation desktop -->
+          <div class="hidden lg:flex gap-4 items-center">
             <NuxtLink
               to="/"
-              class="text-gray-600 dark:text-gray-300 hover:text-white"
+              class="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
             >
               {{ $t("nav.home") }}
             </NuxtLink>
             <NuxtLink
               to="/sequences"
-              class="text-gray-600 dark:text-gray-300 hover:text-white"
+              class="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
             >
               {{ $t("nav.sequences") }}
             </NuxtLink>
@@ -62,6 +64,17 @@
               @click="toggleDark"
             />
           </div>
+
+          <!-- Menu burger mobile -->
+          <MobileMenu
+            :locale-options="localeOptions"
+            :current-locale-option="currentLocaleOption"
+            :update-locale="updateLocale"
+            :sound-enabled="soundEnabled"
+            :toggle-sound="toggleSound"
+            :is-dark="isDark"
+            :toggle-dark="toggleDark"
+          />
         </nav>
       </div>
     </header>

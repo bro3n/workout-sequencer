@@ -1,0 +1,169 @@
+<template>
+  <div class="lg:hidden">
+    <!-- Bouton burger -->
+    <UButton
+      :icon="isOpen ? 'i-heroicons-x-mark' : 'i-heroicons-bars-3'"
+      variant="ghost"
+      size="lg"
+      @click="toggleMenu"
+      :aria-label="isOpen ? 'Fermer le menu' : 'Ouvrir le menu'"
+    />
+
+    <!-- Menu mobile -->
+    <Transition
+      enter-active-class="transition-opacity duration-200"
+      enter-from-class="opacity-0"
+      enter-to-class="opacity-100"
+      leave-active-class="transition-opacity duration-200"
+      leave-from-class="opacity-100"
+      leave-to-class="opacity-0"
+    >
+      <div
+        v-if="isOpen"
+        class="fixed inset-0 z-40 bg-black/50"
+        @click="closeMenu"
+      />
+    </Transition>
+
+    <!-- Panneau latéral -->
+    <Transition
+      enter-active-class="transition-transform duration-300"
+      enter-from-class="translate-x-full"
+      enter-to-class="translate-x-0"
+      leave-active-class="transition-transform duration-300"
+      leave-from-class="translate-x-0"
+      leave-to-class="translate-x-full"
+    >
+      <div
+        v-if="isOpen"
+        class="fixed top-0 right-0 z-50 h-full w-64 bg-white dark:bg-gray-800 shadow-xl overflow-y-auto"
+      >
+        <!-- En-tête du menu -->
+        <div class="flex justify-between items-center p-4 border-b border-gray-200 dark:border-gray-700">
+          <span class="font-semibold text-gray-900 dark:text-white">Menu</span>
+          <UButton
+            icon="i-heroicons-x-mark"
+            variant="ghost"
+            @click="closeMenu"
+            aria-label="Fermer le menu"
+          />
+        </div>
+
+        <!-- Navigation -->
+        <nav class="p-4 space-y-2">
+          <NuxtLink
+            to="/"
+            class="block px-4 py-3 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+            @click="closeMenu"
+          >
+            {{ $t("nav.home") }}
+          </NuxtLink>
+          <NuxtLink
+            to="/sequences"
+            class="block px-4 py-3 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+            @click="closeMenu"
+          >
+            {{ $t("nav.sequences") }}
+          </NuxtLink>
+          <NuxtLink
+            to="/create-sequence"
+            class="block px-4 py-3 rounded-lg bg-blue-600 hover:bg-blue-700 text-white transition-colors text-center font-medium"
+            @click="closeMenu"
+          >
+            {{ $t("nav.create") }}
+          </NuxtLink>
+        </nav>
+
+        <!-- Contrôles -->
+        <div class="p-4 border-t border-gray-200 dark:border-gray-700 space-y-4">
+          <!-- Sélecteur de langue -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              {{ $t("nav.language") }}
+            </label>
+            <USelectMenu
+              :model-value="currentLocaleOption"
+              :items="localeOptions"
+              :search-input="false"
+              @update:model-value="updateLocale"
+              class="w-full"
+            />
+          </div>
+
+          <!-- Boutons de contrôle -->
+          <div class="flex justify-around items-center pt-2">
+            <!-- Bouton de contrôle du son -->
+            <UButton
+              :icon="
+                soundEnabled
+                  ? 'i-heroicons-speaker-wave'
+                  : 'i-heroicons-speaker-x-mark'
+              "
+              :color="soundEnabled ? 'primary' : 'neutral'"
+              :title="
+                soundEnabled ? $t('common.soundOff') : $t('common.soundOn')
+              "
+              variant="ghost"
+              size="lg"
+              @click="toggleSound"
+            />
+
+            <!-- Bouton de basculement dark/light mode -->
+            <UButton
+              :icon="isDark ? 'i-heroicons-sun' : 'i-heroicons-moon'"
+              :title="isDark ? $t('common.lightMode') : $t('common.darkMode')"
+              variant="ghost"
+              size="lg"
+              @click="toggleDark"
+            />
+          </div>
+        </div>
+      </div>
+    </Transition>
+  </div>
+</template>
+
+<script setup lang="ts">
+// Props
+const props = defineProps<{
+  localeOptions: { label: string; value: string }[];
+  currentLocaleOption?: { label: string; value: string };
+  updateLocale: (option: { label: string; value: string }) => void;
+  soundEnabled: boolean;
+  toggleSound: () => void;
+  isDark: boolean;
+  toggleDark: () => void;
+}>();
+
+// État du menu
+const isOpen = ref(false);
+
+// Méthodes
+const toggleMenu = () => {
+  isOpen.value = !isOpen.value;
+};
+
+const closeMenu = () => {
+  isOpen.value = false;
+};
+
+// Fermer le menu lors du changement de route
+const route = useRoute();
+watch(() => route.path, () => {
+  closeMenu();
+});
+
+// Empêcher le scroll du body quand le menu est ouvert
+watch(isOpen, (newValue) => {
+  if (newValue) {
+    document.body.style.overflow = 'hidden';
+  } else {
+    document.body.style.overflow = '';
+  }
+});
+
+// Cleanup au démontage
+onUnmounted(() => {
+  document.body.style.overflow = '';
+});
+</script>

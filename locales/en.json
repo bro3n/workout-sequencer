@@ -19,7 +19,8 @@
     "title": "Workout Sequencer",
     "home": "Home",
     "sequences": "Sequences",
-    "create": "Create"
+    "create": "Create",
+    "language": "Language"
   },
   "sequences": {
     "title": "My sequences",
