@@ -84,6 +84,16 @@
       <NuxtPage />
     </main>
 
+    <!-- Modal d'import depuis URL -->
+    <ImportFromUrlModal
+      v-if="showImportModal && importBase64Data"
+      :open="showImportModal"
+      :base64-data="importBase64Data"
+      @update:open="showImportModal = $event"
+      @imported="handleUrlImport"
+      @close="clearImportParam"
+    />
+
     <!-- Footer collé en bas -->
     <footer
       class="bg-white dark:bg-gray-800 shadow-sm border-t border-gray-200 dark:border-gray-700 mt-auto"
@@ -145,5 +155,39 @@ const soundEnabled = useState("soundEnabled", () => true);
 
 const toggleSound = () => {
   soundEnabled.value = !soundEnabled.value;
+};
+
+// Gestion de l'import depuis URL
+const route = useRoute();
+const router = useRouter();
+const showImportModal = ref(false);
+const importBase64Data = ref<string>("");
+
+// Surveiller les changements de route pour détecter le query param
+watch(
+  () => route.query["import-sequence"],
+  (newValue) => {
+    if (newValue && typeof newValue === "string") {
+      importBase64Data.value = newValue;
+      showImportModal.value = true;
+    }
+  },
+  { immediate: true }
+);
+
+// Gérer l'import réussi
+const handleUrlImport = () => {
+  clearImportParam();
+  // Rediriger vers la page des séquences
+  router.push("/sequences");
+};
+
+// Nettoyer le query param
+const clearImportParam = () => {
+  showImportModal.value = false;
+  importBase64Data.value = "";
+  if (route.query["import-sequence"]) {
+    router.replace({ query: {} });
+  }
 };
 </script>

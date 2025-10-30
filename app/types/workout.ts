@@ -8,6 +8,13 @@ export interface Exercise {
   duration?: number; // en secondes
 }
 
+// Type pour l'historique des lancements de séquences
+export interface WorkoutLaunch {
+  sequenceId: string;
+  sequenceName: string;
+  launchedAt: Date;
+}
+
 export interface WorkoutSequence {
   id: string;
   name: string;

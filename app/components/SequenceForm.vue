@@ -162,7 +162,7 @@
           {{ $t('sequenceForm.reset') }}
         </UButton>
         <UButton type="submit" :disabled="!canSubmit" :loading="isSubmitting">
-          {{ $t('sequenceForm.save') }}
+          {{ isEditMode ? $t('sequenceForm.update') : $t('sequenceForm.save') }}
         </UButton>
       </div>
     </form>
@@ -204,6 +204,9 @@ const cycleBreakDuration = ref(props.initialData?.cycleBreakDuration || 10);
 const cycleRepetitions = ref(props.initialData?.cycleRepetitions || 1);
 const isSubmitting = ref(false);
 const nameError = ref<string>("");
+
+// Détection du mode édition
+const isEditMode = computed(() => !!props.currentSequenceId);
 
 // Validation du nom de séquence
 const validateSequenceName = (name: string): boolean => {
@@ -252,18 +255,26 @@ const updateExercise = (index: number, updatedExercise: CreateExercise) => {
 
 // Validation
 const canSubmit = computed(() => {
-  console.info("TEST DISABLE");
-  return (
-    sequenceName.value.trim() !== "" &&
-    !nameError.value &&
-    exercises.value.length > 0 &&
-    exercises.value.every((ex) => {
-      const hasValidValue = ex.type === 'repetitions'
-        ? (ex.repetitions && ex.repetitions > 0)
-        : (ex.duration && ex.duration > 0);
-      return ex.name.trim() !== "" && hasValidValue;
-    })
-  );
+  const hasName = sequenceName.value.trim() !== "";
+  const noNameError = !nameError.value;
+  const hasExercises = exercises.value.length > 0;
+  const exercisesValid = exercises.value.every((ex) => {
+    const hasValidValue = ex.type === 'repetitions'
+      ? (ex.repetitions && ex.repetitions > 0)
+      : (ex.duration && ex.duration > 0);
+    return ex.name.trim() !== "" && hasValidValue;
+  });
+  
+  console.log("canSubmit validation:", {
+    hasName,
+    noNameError,
+    hasExercises,
+    exercisesValid,
+    nameError: nameError.value,
+    isEditMode: isEditMode.value
+  });
+  
+  return hasName && noNameError && hasExercises && exercisesValid;
 });
 
 // Soumission du formulaire

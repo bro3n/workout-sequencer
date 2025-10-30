@@ -113,7 +113,7 @@ const warmupSequences = ref<WorkoutSequence[]>([]);
 const selectedWarmup = ref<WorkoutSequence | null>(null);
  
 // Utiliser le composable de stockage
-const { getSequenceById, getWarmupSequences } = useWorkoutStorage();
+const { getSequenceById, getWarmupSequences, recordLaunch } = useWorkoutStorage();
 
 // Charger la séquence
 const loadSequence = () => {
@@ -162,6 +162,11 @@ const startWorkout = (withWarmup: boolean) => {
     selectedWarmupId.value = null;
     selectedWarmup.value = null;
     workoutStarted.value = true;
+  }
+  
+  // Enregistrer le lancement dans l'historique
+  if (sequence.value) {
+    recordLaunch(sequence.value.id, sequence.value.name);
   }
 };
 

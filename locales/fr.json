@@ -13,6 +13,13 @@
       "title": "Mes séquences",
       "description": "Consultez et gérez vos séquences d'entraînement existantes.",
       "button": "Voir mes séquences"
+    },
+    "recentWorkouts": {
+      "title": "Entraînements récents",
+      "subtitle": "Relancez rapidement vos 3 dernières séquences",
+      "restart": "Relancer",
+      "unavailable": "Non disponible",
+      "sequenceDeleted": "Cette séquence a été supprimée"
     }
   },
   "nav": {
@@ -61,7 +68,33 @@
     "deleted": "La séquence \"{name}\" a été supprimée.",
     "deleteError": "Une erreur est survenue lors de la suppression.",
     "clearedAll": "Le stockage local a été vidé.",
-    "copyOf": "Copie de"
+    "copyOf": "Copie de",
+    "export": "Exporter",
+    "exportAll": "Exporter tout",
+    "actions": "Actions",
+    "exportModalTitle": "Exporter la séquence",
+    "exportAllModalTitle": "Exporter toutes les séquences",
+    "exportModalDescription": "Choisissez comment exporter votre séquence :",
+    "exportAllModalDescription": "Choisissez comment exporter vos {count} séquences :",
+    "exportAsJson": "Télécharger en JSON",
+    "exportAsUrl": "Copier l'URL",
+    "urlCopied": "URL copiée dans le presse-papiers !",
+    "exportError": "Erreur lors de l'export de la séquence.",
+    "import": "Importer",
+    "importModalTitle": "Importer une séquence",
+    "importModalDescription": "Choisissez un fichier JSON à importer :",
+    "importFromUrlTitle": "Importer depuis un lien",
+    "importFromUrlDescription": "Voulez-vous importer les séquences suivantes ?",
+    "importFromUrlSingle": "Importer cette séquence depuis le lien partagé ?",
+    "selectFile": "Sélectionner un fichier",
+    "fileSelected": "Fichier sélectionné",
+    "importButton": "Importer la séquence",
+    "importFromUrl": "Importer depuis le lien",
+    "importSuccess": "La séquence \"{name}\" a été importée avec succès !",
+    "importMultipleSuccess": "{count} séquence(s) importée(s) avec succès !",
+    "importError": "Erreur lors de l'import de la séquence.",
+    "invalidFileFormat": "Format de fichier invalide. Veuillez sélectionner un fichier JSON valide.",
+    "invalidSequenceData": "Les données de la séquence sont invalides."
   },
   "createSequence": {
     "title": "Créer une séquence de workout",
@@ -105,6 +138,7 @@
     "repetitions": "Répétitions",
     "removeExercise": "Supprimer",
     "save": "Créer la séquence",
+    "update": "Modifier la séquence",
     "reset": "Réinitialiser",
     "cancel": "Annuler",
     "minOneExercise": "Vous devez ajouter au moins un exercice",

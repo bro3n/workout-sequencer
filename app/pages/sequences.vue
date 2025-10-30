@@ -49,13 +49,21 @@
         <UButton @click="refreshSequences" icon="i-heroicons-arrow-path" variant="outline">
           {{ $t('sequences.refresh') }}
         </UButton>
+        <UButton @click="exportAll" icon="i-heroicons-arrow-up-tray" variant="outline" :disabled="filteredSequences.length === 0">
+          {{ $t('sequences.exportAll') }}
+        </UButton>
         <UButton @click="clearAll" color="error" variant="outline" :disabled="filteredSequences.length === 0">
           {{ $t('sequences.deleteAll') }}
         </UButton>
       </div>
-      <UButton to="/create-sequence" icon="i-heroicons-plus">
-        {{ $t('sequences.newSequence') }}
-      </UButton>
+      <div class="flex gap-3">
+        <UButton @click="openImportModal" icon="i-heroicons-arrow-down-tray" variant="outline">
+          {{ $t('sequences.import') }}
+        </UButton>
+        <UButton to="/create-sequence" icon="i-heroicons-plus">
+          {{ $t('sequences.newSequence') }}
+        </UButton>
+      </div>
     </div>
 
     <!-- Liste des séquences -->
@@ -101,23 +109,17 @@
               icon="i-heroicons-play"
               size="sm"
             >
-              {{ $t('sequences.start') }}
+              <span class="hidden sm:inline">{{ $t('sequences.start') }}</span>
             </UButton>
-            <UButton
-              :to="`/edit-sequence/${sequence.id}`"
-              color="neutral"
-              variant="outline"
-              icon="i-heroicons-pencil"
-              size="sm"
-            >
-              {{ $t('sequences.edit') }}
-            </UButton>
-            <UButton @click="duplicateSequenceHandler(sequence.id)" color="neutral" variant="outline" icon="i-heroicons-document-duplicate" size="sm">
-              {{ $t('sequences.duplicate') }}
-            </UButton>
-            <UButton @click="openDeleteModal(sequence)" color="error" variant="ghost" icon="i-heroicons-trash" size="sm">
-              {{ $t('sequences.delete') }}
-            </UButton>
+            <UDropdownMenu :items="getSequenceActions(sequence)">
+              <UButton
+                color="neutral"
+                variant="outline"
+                icon="i-heroicons-ellipsis-vertical"
+                size="sm"
+                :aria-label="$t('sequences.actions')"
+              />
+            </UDropdownMenu>
           </div>
         </div>
 
@@ -190,6 +192,20 @@
         </div>
       </template>
     </UModal>
+
+    <!-- Modal d'export -->
+    <ExportSequenceModal
+      v-model:open="exportModalOpen"
+      :sequence="sequenceToExport"
+      :sequences="sequencesToExport"
+    />
+
+    <!-- Modal d'import -->
+    <ImportSequenceModal
+      v-model:open="importModalOpen"
+      @imported="handleImportSuccess"
+      @imported-multiple="handleImportMultipleSuccess"
+    />
   </div>
 </template>
 
@@ -201,7 +217,8 @@ defineOptions({
   name: 'SequencesPage'
 })
 
-// Utiliser le composable de stockage
+// Composables au niveau du setup
+const { t } = useI18n()
 const { getSequences, saveSequence, deleteSequence, clearAllSequences } = useWorkoutStorage()
 
 // État réactif
@@ -211,6 +228,10 @@ const message = ref('')
 const messageType = ref<'success' | 'error' | ''>('')
 const deleteModalOpen = ref(false)
 const sequenceToDelete = ref<WorkoutSequence | null>(null)
+const exportModalOpen = ref(false)
+const sequenceToExport = ref<WorkoutSequence | null>(null)
+const sequencesToExport = ref<WorkoutSequence[]>([])
+const importModalOpen = ref(false)
 
 // Charger les séquences au montage
 const loadSequences = () => {
@@ -232,10 +253,40 @@ const warmupCount = computed(() => {
   return sequences.value.filter(seq => seq.type === 'warmup').length
 })
 
+// Créer les actions du menu dropdown pour chaque séquence
+const getSequenceActions = (sequence: WorkoutSequence) => {
+  return [
+    [
+      {
+        label: t('sequences.edit'),
+        icon: 'i-heroicons-pencil',
+        onSelect: () => navigateTo(`/edit-sequence/${sequence.id}`)
+      },
+      {
+        label: t('sequences.duplicate'),
+        icon: 'i-heroicons-document-duplicate',
+        onSelect: () => duplicateSequenceHandler(sequence.id)
+      },
+      {
+        label: t('sequences.export'),
+        icon: 'i-heroicons-arrow-up-tray',
+        onSelect: () => openExportModal(sequence)
+      }
+    ],
+    [
+      {
+        label: t('sequences.delete'),
+        icon: 'i-heroicons-trash',
+        color: 'error',
+        onSelect: () => openDeleteModal(sequence)
+      }
+    ]
+  ]
+}
+
 // Actualiser les séquences
 const refreshSequences = () => {
   loadSequences()
-  const { t } = useI18n()
   const count = filteredSequences.value.length
   const typeLabel = filterType.value === 'workout' ? t('sequences.sequenceType') : t('sequences.warmupType')
   const plural = count > 1 ? 's' : ''
@@ -250,7 +301,6 @@ const refreshSequences = () => {
 
 // Dupliquer une séquence
 const duplicateSequenceHandler = (id: string) => {
-  const { t } = useI18n()
   const sequenceToDuplicate = sequences.value.find(s => s.id === id)
   
   if (!sequenceToDuplicate) {
@@ -306,7 +356,6 @@ const cancelDelete = () => {
 // Confirmer la suppression
 const confirmDelete = () => {
   if (!sequenceToDelete.value) return
-  const { t } = useI18n()
   
   const sequenceName = sequenceToDelete.value.name
   
@@ -328,10 +377,51 @@ const confirmDelete = () => {
   }, 3000)
 }
 
+// Ouvrir la modal d'export pour une séquence
+const openExportModal = (sequence: WorkoutSequence) => {
+  sequenceToExport.value = sequence
+  sequencesToExport.value = []
+  exportModalOpen.value = true
+}
+
+// Ouvrir la modal d'export pour toutes les séquences
+const exportAll = () => {
+  sequenceToExport.value = null
+  sequencesToExport.value = filteredSequences.value
+  exportModalOpen.value = true
+}
+
+// Ouvrir la modal d'import
+const openImportModal = () => {
+  importModalOpen.value = true
+}
+
+// Gérer le succès de l'import d'une séquence
+const handleImportSuccess = (sequence: WorkoutSequence) => {
+  loadSequences()
+  message.value = t('sequences.importSuccess', { name: sequence.name })
+  messageType.value = 'success'
+  
+  setTimeout(() => {
+    message.value = ''
+    messageType.value = ''
+  }, 3000)
+}
+
+// Gérer le succès de l'import multiple
+const handleImportMultipleSuccess = (count: number) => {
+  loadSequences()
+  message.value = t('sequences.importMultipleSuccess', { count })
+  messageType.value = 'success'
+  
+  setTimeout(() => {
+    message.value = ''
+    messageType.value = ''
+  }, 3000)
+}
+
 // Supprimer toutes les séquences
 const clearAll = () => {
-  const { t } = useI18n()
-  
   if (clearAllSequences()) {
     loadSequences()
     message.value = t('sequences.clearedAll')

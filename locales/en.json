@@ -13,6 +13,13 @@
       "title": "My sequences",
       "description": "View and manage your existing workout sequences.",
       "button": "View my sequences"
+    },
+    "recentWorkouts": {
+      "title": "Recent Workouts",
+      "subtitle": "Quickly restart your last 3 sequences",
+      "restart": "Restart",
+      "unavailable": "Unavailable",
+      "sequenceDeleted": "This sequence has been deleted"
     }
   },
   "nav": {
@@ -61,7 +68,33 @@
     "deleted": "Sequence \"{name}\" has been deleted.",
     "deleteError": "An error occurred while deleting.",
     "clearedAll": "Local storage has been cleared.",
-    "copyOf": "Copy of"
+    "copyOf": "Copy of",
+    "export": "Export",
+    "exportAll": "Export all",
+    "actions": "Actions",
+    "exportModalTitle": "Export sequence",
+    "exportAllModalTitle": "Export all sequences",
+    "exportModalDescription": "Choose how to export your sequence:",
+    "exportAllModalDescription": "Choose how to export your {count} sequences:",
+    "exportAsJson": "Download as JSON",
+    "exportAsUrl": "Copy URL",
+    "urlCopied": "URL copied to clipboard!",
+    "exportError": "Error exporting the sequence.",
+    "import": "Import",
+    "importModalTitle": "Import a sequence",
+    "importModalDescription": "Choose a JSON file to import:",
+    "importFromUrlTitle": "Import from link",
+    "importFromUrlDescription": "Do you want to import the following sequences?",
+    "importFromUrlSingle": "Import this sequence from the shared link?",
+    "selectFile": "Select file",
+    "fileSelected": "File selected",
+    "importButton": "Import sequence",
+    "importFromUrl": "Import from link",
+    "importSuccess": "Sequence \"{name}\" has been imported successfully!",
+    "importMultipleSuccess": "{count} sequence(s) imported successfully!",
+    "importError": "Error importing the sequence.",
+    "invalidFileFormat": "Invalid file format. Please select a valid JSON file.",
+    "invalidSequenceData": "The sequence data is invalid."
   },
   "createSequence": {
     "title": "Create a workout sequence",
@@ -105,6 +138,7 @@
     "repetitions": "Repetitions",
     "removeExercise": "Remove",
     "save": "Create sequence",
+    "update": "Update sequence",
     "reset": "Reset",
     "cancel": "Cancel",
     "minOneExercise": "You must add at least one exercise",

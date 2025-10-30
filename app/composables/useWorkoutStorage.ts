@@ -1,10 +1,12 @@
-import type { WorkoutSequence } from "~/types/workout";
+import type { WorkoutSequence, WorkoutLaunch } from "~/types/workout";
 
 /**
  * Composable pour gérer le stockage local des séquences de workout
  */
 export const useWorkoutStorage = () => {
   const STORAGE_KEY = "workout-sequences";
+  const LAUNCH_HISTORY_KEY = "workout-launch-history";
+  const MAX_LAUNCH_HISTORY = 3;
 
   /**
    * Récupère toutes les séquences depuis le localStorage
@@ -138,6 +140,67 @@ export const useWorkoutStorage = () => {
     return getSequences('warmup');
   };
 
+  /**
+   * Enregistre un lancement de séquence dans l'historique
+   */
+  const recordLaunch = (sequenceId: string, sequenceName: string): boolean => {
+    if (typeof window === 'undefined' || !window.localStorage) return false;
+
+    try {
+      const launches = getLaunchHistory();
+      const newLaunch: WorkoutLaunch = {
+        sequenceId,
+        sequenceName,
+        launchedAt: new Date(),
+      };
+
+      // Ajouter le nouveau lancement au début
+      const updatedLaunches = [newLaunch, ...launches];
+
+      // Garder seulement les 3 derniers lancements
+      const trimmedLaunches = updatedLaunches.slice(0, MAX_LAUNCH_HISTORY);
+
+      localStorage.setItem(LAUNCH_HISTORY_KEY, JSON.stringify(trimmedLaunches));
+      return true;
+    } catch (error) {
+      console.error("Erreur lors de l'enregistrement du lancement:", error);
+      return false;
+    }
+  };
+
+  /**
+   * Récupère l'historique des lancements
+   */
+  const getLaunchHistory = (): WorkoutLaunch[] => {
+    if (typeof window === 'undefined' || !window.localStorage) return [];
+
+    try {
+      const stored = localStorage.getItem(LAUNCH_HISTORY_KEY);
+      if (!stored) return [];
+
+      const launches = JSON.parse(stored) as WorkoutLaunch[];
+      // Reconvertir les dates depuis les strings
+      return launches.map((launch) => ({
+        ...launch,
+        launchedAt: new Date(launch.launchedAt),
+      }));
+    } catch (error) {
+      console.error("Erreur lors de la récupération de l'historique:", error);
+      return [];
+    }
+  };
+
+  /**
+   * Récupère les détails des séquences récemment lancées
+   */
+  const getRecentLaunches = (): Array<WorkoutLaunch & { sequence: WorkoutSequence | null }> => {
+    const launches = getLaunchHistory();
+    return launches.map((launch) => ({
+      ...launch,
+      sequence: getSequenceById(launch.sequenceId),
+    }));
+  };
+
   return {
     getSequences,
     getWorkoutSequences,
@@ -147,5 +210,8 @@ export const useWorkoutStorage = () => {
     deleteSequence,
     getSequenceById,
     clearAllSequences,
+    recordLaunch,
+    getLaunchHistory,
+    getRecentLaunches,
   };
 };

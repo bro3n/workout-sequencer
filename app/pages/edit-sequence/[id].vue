@@ -68,6 +68,9 @@ import type {
 // Route
 const route = useRoute();
 
+// i18n
+const { t } = useI18n();
+
 // État
 const sequenceData = ref<CreateWorkoutSequence | null>(null);
 const loading = ref(true);
@@ -84,7 +87,6 @@ const { getSequenceById, updateSequence } = useWorkoutStorage();
 // Charger la séquence
 const loadSequence = () => {
   const id = route.params.id as string;
-  const { t } = useI18n();
   
   if (!id) {
     error.value = t('editSequence.idMissing');
@@ -124,7 +126,6 @@ const loadSequence = () => {
 // Fonction pour gérer la mise à jour d'une séquence
 const handleUpdateSequence = (updatedData: CreateWorkoutSequence) => {
   const id = route.params.id as string;
-  const { t } = useI18n();
   console.log("edit-sequence.vue - Réception de l'événement save:", updatedData);
 
   try {
