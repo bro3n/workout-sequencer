@@ -123,7 +123,7 @@
           <div
             v-for="(exercise, index) in exercises"
             :key="index"
-            class="flex items-center gap-4 p-4 border border-gray-200 dark:border-gray-600 rounded-lg"
+            class="flex flex-col sm:flex-row sm:items-center gap-3 p-4 border border-gray-200 dark:border-gray-600 rounded-lg"
           >
             <div class="flex-1">
               <ExerciseForm
@@ -136,6 +136,7 @@
               variant="ghost"
               icon="i-heroicons-trash"
               size="sm"
+              class="self-end sm:self-auto"
               @click="removeExercise(index)"
             />
           </div>

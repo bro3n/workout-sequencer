@@ -44,23 +44,22 @@
     </div>
 
     <!-- Actions globales -->
-    <div class="flex justify-between items-center mb-6">
+    <div class="flex flex-col gap-3 mb-6">
+      <!-- Première ligne : Import et Export -->
       <div class="flex gap-3">
-        <UButton @click="refreshSequences" icon="i-heroicons-arrow-path" variant="outline">
-          {{ $t('sequences.refresh') }}
-        </UButton>
-        <UButton @click="exportAll" icon="i-heroicons-arrow-up-tray" variant="outline" :disabled="filteredSequences.length === 0">
-          {{ $t('sequences.exportAll') }}
-        </UButton>
-        <UButton @click="clearAll" color="error" variant="outline" :disabled="filteredSequences.length === 0">
-          {{ $t('sequences.deleteAll') }}
-        </UButton>
-      </div>
-      <div class="flex gap-3">
-        <UButton @click="openImportModal" icon="i-heroicons-arrow-down-tray" variant="outline">
+        <UButton @click="openImportModal" icon="i-heroicons-arrow-down-tray" variant="outline" size="sm" class="flex-1">
           {{ $t('sequences.import') }}
         </UButton>
-        <UButton to="/create-sequence" icon="i-heroicons-plus">
+        <UButton @click="exportAll" icon="i-heroicons-arrow-up-tray" variant="outline" size="sm" class="flex-1" :disabled="filteredSequences.length === 0">
+          {{ $t('sequences.exportAll') }}
+        </UButton>
+      </div>
+      <!-- Deuxième ligne : Delete All et New Sequence -->
+      <div class="flex gap-3">
+        <UButton @click="openDeleteAllModal" color="error" variant="outline" size="sm" class="flex-1" :disabled="filteredSequences.length === 0">
+          {{ $t('sequences.deleteAll') }}
+        </UButton>
+        <UButton to="/create-sequence" icon="i-heroicons-plus" size="sm" class="flex-1">
           {{ $t('sequences.newSequence') }}
         </UButton>
       </div>
@@ -74,7 +73,7 @@
         class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6"
       >
         <div class="flex justify-between items-start mb-4">
-          <div>
+          <div class="flex-1">
             <div class="flex items-center gap-2 mb-2">
               <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
                 {{ sequence.name }}
@@ -85,20 +84,71 @@
               >
                 {{ $t('sequences.warmupBadge') }}
               </span>
+              <UButton
+                color="neutral"
+                variant="ghost"
+                icon="i-heroicons-information-circle"
+                size="md"
+                class="cursor-pointer"
+                @click="toggleDateInfo(sequence.id)"
+                :aria-label="$t('sequences.showDates')"
+              />
             </div>
-            <div class="text-sm text-gray-500 dark:text-gray-400 space-y-1">
-              <p>{{ sequence.exercises.length }} {{ $t('sequences.exercises') }}</p>
-              <p v-if="sequence.cycleRepetitions && sequence.cycleRepetitions > 1">
-                {{ $t('sequences.cycles') }} : {{ sequence.cycleRepetitions }}
-              </p>
-              <p v-if="sequence.breakDuration && sequence.breakDuration > 0">
-                {{ $t('sequences.breakBetween') }} : {{ sequence.breakDuration }}s
-              </p>
-              <p v-else>{{ $t('sequences.noBreak') }}</p>
-              <p>{{ $t('sequences.createdAt') }} {{ formatDate(sequence.createdAt) }}</p>
-              <p v-if="sequence.updatedAt.getTime() !== sequence.createdAt.getTime()">
-                {{ $t('sequences.updatedAt') }} {{ formatDate(sequence.updatedAt) }}
-              </p>
+            <div class="text-sm space-y-2">
+              <div class="flex items-center gap-2 text-gray-600 dark:text-gray-300">
+                <UIcon name="i-heroicons-queue-list" class="w-4 h-4" />
+                <span>
+                  {{ sequence.exercises.length }}
+                  {{ $t('sequences.exercises') }}
+                </span>
+              </div>
+
+              <div
+                v-if="sequence.cycleRepetitions && sequence.cycleRepetitions > 1"
+                class="flex items-center gap-2 text-gray-600 dark:text-gray-300"
+              >
+                <UIcon name="i-heroicons-arrow-path" class="w-4 h-4" />
+                <span>
+                  {{ sequence.cycleRepetitions }}
+                  {{ $t('sequences.cycles') }}
+                </span>
+              </div>
+
+              <div
+                v-if="sequence.breakDuration && sequence.breakDuration > 0"
+                class="flex items-center gap-2 text-gray-600 dark:text-gray-300"
+              >
+                <UIcon name="i-heroicons-pause-circle" class="w-4 h-4" />
+                <span>
+                  {{ sequence.breakDuration }}s
+                  {{ $t('sequences.breakBetween') }}
+                </span>
+              </div>
+
+              <div
+                v-else
+                class="flex items-center gap-2 text-gray-600 dark:text-gray-300"
+              >
+                <UIcon name="i-heroicons-pause-circle" class="w-4 h-4" />
+                <span>{{ $t('sequences.noBreak') }}</span>
+              </div>
+            </div>
+            <!-- Info box des dates -->
+            <div
+              v-if="showDateInfo[sequence.id]"
+              class="mt-3 p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg text-sm"
+            >
+              <div class="flex items-start gap-2">
+                <span class="i-heroicons-calendar text-blue-600 dark:text-blue-400 mt-0.5"></span>
+                <div class="space-y-1">
+                  <p class="text-blue-800 dark:text-blue-300">
+                    <span class="font-medium">{{ $t('sequences.createdAt') }}</span> {{ formatDate(sequence.createdAt) }}
+                  </p>
+                  <p v-if="sequence.updatedAt.getTime() !== sequence.createdAt.getTime()" class="text-blue-800 dark:text-blue-300">
+                    <span class="font-medium">{{ $t('sequences.updatedAt') }}</span> {{ formatDate(sequence.updatedAt) }}
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
           <div class="flex gap-2">
@@ -117,6 +167,7 @@
                 variant="outline"
                 icon="i-heroicons-ellipsis-vertical"
                 size="sm"
+                class="h-9 w-10 flex items-center justify-center"
                 :aria-label="$t('sequences.actions')"
               />
             </UDropdownMenu>
@@ -200,6 +251,36 @@
       :sequences="sequencesToExport"
     />
 
+    <!-- Modal de confirmation de suppression de toutes les séquences -->
+    <UModal v-model:open="deleteAllModalOpen" :title="$t('sequences.deleteAllModalTitle')">
+      <template #body>
+        <p class="text-gray-700 dark:text-gray-300">
+          {{ $t('sequences.deleteAllConfirm') }}
+        </p>
+        <p class="text-sm text-gray-500 dark:text-gray-400 mt-2">
+          {{ $t('sequences.irreversible') }}
+        </p>
+        <p class="text-sm font-semibold text-orange-600 dark:text-orange-400 mt-3">
+          {{ filteredSequences.length }} {{ filterType === 'workout' ? $t('sequences.sequenceType') : $t('sequences.warmupType') }}{{ filteredSequences.length > 1 ? 's' : '' }}
+        </p>
+      </template>
+      <template #footer>
+        <div class="flex justify-end gap-3">
+          <UButton
+            :label="$t('sequences.cancel')"
+            color="neutral"
+            variant="outline"
+            @click="cancelDeleteAll"
+          />
+          <UButton
+            :label="$t('sequences.confirmDelete')"
+            color="error"
+            @click="confirmDeleteAll"
+          />
+        </div>
+      </template>
+    </UModal>
+
     <!-- Modal d'import -->
     <ImportSequenceModal
       v-model:open="importModalOpen"
@@ -232,6 +313,8 @@ const exportModalOpen = ref(false)
 const sequenceToExport = ref<WorkoutSequence | null>(null)
 const sequencesToExport = ref<WorkoutSequence[]>([])
 const importModalOpen = ref(false)
+const showDateInfo = ref<Record<string, boolean>>({})
+const deleteAllModalOpen = ref(false)
 
 // Charger les séquences au montage
 const loadSequences = () => {
@@ -252,6 +335,11 @@ const workoutCount = computed(() => {
 const warmupCount = computed(() => {
   return sequences.value.filter(seq => seq.type === 'warmup').length
 })
+
+// Basculer l'affichage des informations de date
+const toggleDateInfo = (sequenceId: string) => {
+  showDateInfo.value[sequenceId] = !showDateInfo.value[sequenceId]
+}
 
 // Créer les actions du menu dropdown pour chaque séquence
 const getSequenceActions = (sequence: WorkoutSequence) => {
@@ -284,20 +372,6 @@ const getSequenceActions = (sequence: WorkoutSequence) => {
   ]
 }
 
-// Actualiser les séquences
-const refreshSequences = () => {
-  loadSequences()
-  const count = filteredSequences.value.length
-  const typeLabel = filterType.value === 'workout' ? t('sequences.sequenceType') : t('sequences.warmupType')
-  const plural = count > 1 ? 's' : ''
-  message.value = t('sequences.refreshed', { count, type: typeLabel, plural })
-  messageType.value = 'success'
-  
-  setTimeout(() => {
-    message.value = ''
-    messageType.value = ''
-  }, 3000)
-}
 
 // Dupliquer une séquence
 const duplicateSequenceHandler = (id: string) => {
@@ -420,8 +494,18 @@ const handleImportMultipleSuccess = (count: number) => {
   }, 3000)
 }
 
-// Supprimer toutes les séquences
-const clearAll = () => {
+// Ouvrir la modal de suppression de toutes les séquences
+const openDeleteAllModal = () => {
+  deleteAllModalOpen.value = true
+}
+
+// Annuler la suppression de toutes les séquences
+const cancelDeleteAll = () => {
+  deleteAllModalOpen.value = false
+}
+
+// Confirmer la suppression de toutes les séquences
+const confirmDeleteAll = () => {
   if (clearAllSequences()) {
     loadSequences()
     message.value = t('sequences.clearedAll')
@@ -430,6 +514,8 @@ const clearAll = () => {
     message.value = t('sequences.deleteError')
     messageType.value = 'error'
   }
+  
+  deleteAllModalOpen.value = false
   
   setTimeout(() => {
     message.value = ''

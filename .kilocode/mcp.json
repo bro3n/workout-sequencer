@@ -7,7 +7,8 @@
       "type": "streamable-http",
       "url": "https://ui.nuxt.com/mcp",
       "alwaysAllow": [
-        "get_component"
+        "get_component",
+        "list_components"
       ]
     }
   }

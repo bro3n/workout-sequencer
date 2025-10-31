@@ -54,6 +54,8 @@
     "delete": "Supprimer",
     "deleteModalTitle": "Confirmer la suppression",
     "deleteConfirm": "Êtes-vous sûr de vouloir supprimer la séquence",
+    "deleteAllModalTitle": "Confirmer la suppression de toutes les séquences",
+    "deleteAllConfirm": "Êtes-vous sûr de vouloir supprimer toutes les séquences filtrées ?",
     "irreversible": "Cette action est irréversible.",
     "cancel": "Annuler",
     "confirmDelete": "Supprimer",

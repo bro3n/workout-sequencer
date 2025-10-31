@@ -1,7 +1,7 @@
 <template>
-  <div class="flex gap-4 items-end">
+  <div class="flex flex-col sm:flex-row gap-4 sm:items-end">
     <!-- Nom de l'exercice -->
-    <div class="flex-1">
+    <div class="flex-1 min-w-0">
       <label
         class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
       >
@@ -15,7 +15,7 @@
     </div>
 
     <!-- Type d'exercice -->
-    <div class="w-32">
+    <div class="w-full sm:w-32">
       <label
         class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
       >
@@ -28,7 +28,7 @@
     </div>
 
     <!-- Nombre de répétitions -->
-    <div v-if="exerciseType === 'repetitions'" class="w-32">
+    <div v-if="exerciseType === 'repetitions'" class="w-full sm:w-32">
       <label
         class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
       >
@@ -44,7 +44,7 @@
     </div>
 
     <!-- Durée en secondes -->
-    <div v-else class="w-32">
+    <div v-else class="w-full sm:w-32">
       <label
         class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
       >
