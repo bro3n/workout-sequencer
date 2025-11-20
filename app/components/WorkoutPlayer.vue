@@ -28,13 +28,13 @@
         <h2 class="text-2xl font-bold text-white">{{ activeSequence.name }}</h2>
       </div>
       <div class="flex justify-between items-center">
-        <div class="text-gray-600 dark:text-gray-300">
+        <div v-if="!isCompleted" class="text-gray-600 dark:text-gray-300">
           <span>{{ $t('sequences.exercisesList') }} {{ currentExerciseIndex + 1 }} / {{ activeSequence.exercises.length }}</span>
           <span v-if="cycleRepetitions > 1" class="ml-2">
             ({{ $t('workout.cycle') }} {{ currentCycle }} / {{ cycleRepetitions }})
           </span>
         </div>
-        <div class="flex gap-2">
+        <div v-if="!isCompleted && !isCountdown" class="flex gap-2">
           <UButton
             v-if="!isRunning"
             @click="startWorkout"
@@ -100,7 +100,7 @@
     </div>
 
     <!-- Exercice actuel -->
-    <div v-if="currentExercise && !isBreak && !isCountdown && !isTransitionPhase" class="text-center mb-8">
+    <div v-if="currentExercise && !isBreak && !isCountdown && !isTransitionPhase && (isRunning || isPaused)" class="text-center mb-8">
       <h3 class="text-3xl font-bold text-white mb-4">
         {{ currentExercise.name }}
       </h3>
@@ -559,8 +559,11 @@ const startCurrentExercise = () => {
   }
 };
 
-const startBreak = () => {
-  const breakDuration = activeSequence.value.breakDuration || 0;
+const startBreak = (isCycleBreak: boolean = false) => {
+  const breakDuration = isCycleBreak
+    ? (activeSequence.value.cycleBreakDuration || 0)
+    : (activeSequence.value.breakDuration || 0);
+    
   if (breakDuration <= 0) {
     // Pas de pause configurée, passer directement à l'exercice suivant
     proceedToNextExercise();
@@ -584,9 +587,9 @@ const proceedToNextExercise = () => {
       currentExerciseIndex.value = 0;
       
       // Ajouter une pause entre les cycles si configurée
-      const hasBreakDuration = (activeSequence.value.breakDuration || 0) > 0;
-      if (hasBreakDuration) {
-        startBreak();
+      const hasCycleBreakDuration = (activeSequence.value.cycleBreakDuration || 0) > 0;
+      if (hasCycleBreakDuration) {
+        startBreak(true);
       } else {
         startCurrentExercise();
       }
@@ -627,8 +630,8 @@ const startTimer = () => {
       timerId.value = null;
       
       if (isBreak.value) {
-        // Fin de la pause, démarrer l'exercice (sans incrémenter l'index)
-        startCurrentExercise();
+        // Fin de la pause, passer à l'exercice suivant
+        proceedToNextExercise();
       } else {
         // Fin de l'exercice, jouer le son de fin puis gérer la transition
         playBeep('end');

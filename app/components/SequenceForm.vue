@@ -136,7 +136,7 @@
               variant="ghost"
               icon="i-heroicons-trash"
               size="sm"
-              class="self-end sm:self-auto"
+              class="self-center sm:self-auto"
               @click="removeExercise(index)"
             />
           </div>
