@@ -107,6 +107,18 @@
           :style="{ width: breakProgressPercentage + '%' }"
         ></div>
       </div>
+      <!-- Affichage du prochain exercice -->
+      <div
+        v-if="nextExerciseName"
+        class="mt-6 p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg"
+      >
+        <p class="text-sm text-blue-800 dark:text-blue-300 mb-1">
+          {{ $t("workout.nextExercise") }} :
+        </p>
+        <p class="text-2xl font-bold text-blue-900 dark:text-blue-100">
+          {{ nextExerciseName }}
+        </p>
+      </div>
     </div>
 
     <!-- Exercice actuel -->
@@ -471,6 +483,19 @@ const breakProgressPercentage = computed(() => {
     ((breakTotalDuration.value - timeLeft.value) / breakTotalDuration.value) *
     100
   );
+});
+
+// Nom du prochain exercice (pour l'affichage pendant la pause)
+const nextExerciseName = computed(() => {
+  // Vérifier qu'on est bien en pause
+  if (!isBreak.value) return null;
+
+  // Le prochain exercice est celui à currentExerciseIndex (qui a déjà été incrémenté)
+  if (currentExerciseIndex.value < activeSequence.value.exercises.length) {
+    return activeSequence.value.exercises[currentExerciseIndex.value]?.name || null;
+  }
+
+  return null;
 });
 
 const timeLeftClass = computed(() => {
