@@ -4,9 +4,11 @@
     <div v-if="isTransitionPhase" class="text-center py-12">
       <div class="mb-8">
         <div class="text-6xl mb-6">🎯</div>
-        <h2 class="text-3xl font-bold text-white mb-4">{{ $t('workout.warmupCompleted') }}</h2>
+        <h2 class="text-3xl font-bold text-white mb-4">
+          {{ $t("workout.warmupCompleted") }}
+        </h2>
         <p class="text-xl text-gray-300 mb-8">
-          {{ $t('workout.readyForMain') }}
+          {{ $t("workout.readyForMain") }}
         </p>
         <UButton
           @click="startMainSequence"
@@ -14,7 +16,7 @@
           size="xl"
           icon="i-heroicons-play"
         >
-          {{ $t('workout.startMainSequence') }}
+          {{ $t("workout.startMainSequence") }}
         </UButton>
       </div>
     </div>
@@ -23,15 +25,20 @@
     <div v-if="!isTransitionPhase" class="mb-6">
       <div class="flex items-center gap-2 mb-2">
         <UBadge v-if="isWarmupPhase" color="warning" variant="soft">
-          {{ $t('sequences.warmupBadge') }}
+          {{ $t("sequences.warmupBadge") }}
         </UBadge>
         <h2 class="text-2xl font-bold text-white">{{ activeSequence.name }}</h2>
       </div>
       <div class="flex justify-between items-center">
         <div v-if="!isCompleted" class="text-gray-600 dark:text-gray-300">
-          <span>{{ $t('sequences.exercisesList') }} {{ currentExerciseIndex + 1 }} / {{ activeSequence.exercises.length }}</span>
+          <span
+            >{{ $t("sequences.exercisesList") }}
+            {{ currentExerciseIndex + 1 }} /
+            {{ activeSequence.exercises.length }}</span
+          >
           <span v-if="cycleRepetitions > 1" class="ml-2">
-            ({{ $t('workout.cycle') }} {{ currentCycle }} / {{ cycleRepetitions }})
+            ({{ $t("workout.cycle") }} {{ currentCycle }} /
+            {{ cycleRepetitions }})
           </span>
         </div>
         <div v-if="!isCompleted && !isCountdown" class="flex gap-2">
@@ -41,7 +48,7 @@
             color="primary"
             icon="i-heroicons-play"
           >
-            {{ isPaused ? $t('workout.resume') : $t('workout.start') }}
+            {{ isPaused ? $t("workout.resume") : $t("workout.start") }}
           </UButton>
           <template v-else>
             <UButton
@@ -50,15 +57,15 @@
               variant="outline"
               icon="i-heroicons-pause"
             >
-              {{ $t('workout.pause') }}
+              {{ $t("workout.pause") }}
             </UButton>
             <UButton
-              @click="stopWorkout"
+              @click="openStopModal"
               color="error"
               variant="outline"
               icon="i-heroicons-stop"
             >
-              {{ $t('workout.stop') }}
+              {{ $t("workout.stop") }}
             </UButton>
           </template>
         </div>
@@ -69,7 +76,7 @@
     <div v-if="isCountdown && !isTransitionPhase" class="text-center mb-8">
       <div class="mb-8">
         <h3 class="text-4xl font-bold text-white mb-8 animate-pulse">
-          {{ $t('workout.prepareYourself') }}
+          {{ $t("workout.prepareYourself") }}
         </h3>
         <div class="text-9xl font-bold animate-slide-in">
           {{ countdownEmoji }}
@@ -78,18 +85,21 @@
     </div>
 
     <!-- Pause active -->
-    <div v-if="isBreak && !isCompleted && !isCountdown && !isTransitionPhase" class="text-center mb-8">
+    <div
+      v-if="isBreak && !isCompleted && !isCountdown && !isTransitionPhase"
+      class="text-center mb-8"
+    >
       <div class="mb-4 flex items-center justify-center gap-2">
         <UIcon name="i-heroicons-pause" class="w-8 h-8 text-yellow-500" />
         <h3 class="text-3xl font-bold text-yellow-500">
-          {{ $t('workout.break') }}
+          {{ $t("workout.break") }}
         </h3>
       </div>
       <div class="text-8xl font-bold text-yellow-500">
         {{ formatTime(timeLeft) }}
       </div>
       <div class="text-xl text-gray-600 dark:text-gray-300 mt-4">
-        {{ $t('workout.prepareNext') }}
+        {{ $t("workout.prepareNext") }}
       </div>
       <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-4 mt-4">
         <div
@@ -100,7 +110,16 @@
     </div>
 
     <!-- Exercice actuel -->
-    <div v-if="currentExercise && !isBreak && !isCountdown && !isTransitionPhase && (isRunning || isPaused)" class="text-center mb-8">
+    <div
+      v-if="
+        currentExercise &&
+        !isBreak &&
+        !isCountdown &&
+        !isTransitionPhase &&
+        (isRunning || isPaused)
+      "
+      class="text-center mb-8"
+    >
       <h3 class="text-3xl font-bold text-white mb-4">
         {{ currentExercise.name }}
       </h3>
@@ -116,7 +135,11 @@
           {{ currentExercise.repetitions }}
         </div>
         <div class="text-xl text-gray-600 dark:text-gray-300">
-          {{ currentExercise.repetitions && currentExercise.repetitions > 1 ? $t('workout.repetitions') : $t('workout.repetition') }}
+          {{
+            currentExercise.repetitions && currentExercise.repetitions > 1
+              ? $t("workout.repetitions")
+              : $t("workout.repetition")
+          }}
         </div>
         <UButton
           v-if="isRunning"
@@ -135,7 +158,7 @@
           {{ formatTime(timeLeft) }}
         </div>
         <div class="text-xl text-gray-600 dark:text-gray-300">
-          {{ $t('workout.secondsRemaining') }}
+          {{ $t("workout.secondsRemaining") }}
         </div>
         <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-4 mt-4">
           <div
@@ -150,19 +173,25 @@
     <div v-if="isCompleted && !isTransitionPhase" class="text-center space-y-4">
       <div class="text-4xl">🎉</div>
       <h3 class="text-2xl font-bold text-green-500">
-        {{ isWarmupPhase ? $t('workout.warmupCompleted') : $t('workout.completed') }}
+        {{
+          isWarmupPhase
+            ? $t("workout.warmupCompleted")
+            : $t("workout.completed")
+        }}
       </h3>
       <p class="text-gray-600 dark:text-gray-300">
-        {{ $t('workout.congratulations') }}
+        {{ $t("workout.congratulations") }}
       </p>
       <UButton v-if="!isWarmupPhase" @click="resetWorkout" color="primary">
-        {{ $t('workout.restart') }}
+        {{ $t("workout.restart") }}
       </UButton>
     </div>
 
     <!-- Liste des exercices avec statut -->
     <div v-if="!isTransitionPhase" class="mt-8">
-      <h4 class="text-lg font-semibold text-white mb-4">{{ $t('workout.progression') }}</h4>
+      <h4 class="text-lg font-semibold text-white mb-4">
+        {{ $t("workout.progression") }}
+      </h4>
       <div class="space-y-2">
         <div
           v-for="(exercise, index) in activeSequence.exercises"
@@ -181,16 +210,50 @@
             <span class="font-medium">{{ exercise.name }}</span>
             <span class="text-sm text-gray-600 dark:text-gray-400 ml-2">
               <template v-if="exercise.type === 'repetitions'">
-                {{ exercise.repetitions }} {{ exercise.repetitions && exercise.repetitions > 1 ? $t('workout.repetitions') : $t('workout.repetition') }}
+                {{ exercise.repetitions }}
+                {{
+                  exercise.repetitions && exercise.repetitions > 1
+                    ? $t("workout.repetitions")
+                    : $t("workout.repetition")
+                }}
               </template>
               <template v-else>
-                {{ exercise.duration }} {{ exercise.duration && exercise.duration > 1 ? $t('workout.seconds') : $t('workout.second') }}
+                {{ exercise.duration }}
+                {{
+                  exercise.duration && exercise.duration > 1
+                    ? $t("workout.seconds")
+                    : $t("workout.second")
+                }}
               </template>
             </span>
           </div>
         </div>
       </div>
     </div>
+
+    <!-- Modal de confirmation d'arrêt -->
+    <UModal v-model:open="stopModalOpen" :title="$t('workout.stopModalTitle')">
+      <template #body>
+        <p class="text-gray-700 dark:text-gray-300">
+          {{ $t("workout.stopModalMessage") }}
+        </p>
+      </template>
+      <template #footer>
+        <div class="flex justify-end gap-3">
+          <UButton
+            :label="$t('workout.stopModalCancel')"
+            color="neutral"
+            variant="outline"
+            @click="cancelStop"
+          />
+          <UButton
+            :label="$t('workout.stopModalConfirm')"
+            color="error"
+            @click="confirmStop"
+          />
+        </div>
+      </template>
+    </UModal>
   </div>
 </template>
 
@@ -213,13 +276,13 @@ const emit = defineEmits<{
 }>();
 
 // État de la phase (échauffement ou séquence principale)
-const currentPhase = ref<'warmup' | 'main' | 'transition'>('warmup');
-const isWarmupPhase = computed(() => currentPhase.value === 'warmup');
-const isTransitionPhase = computed(() => currentPhase.value === 'transition');
+const currentPhase = ref<"warmup" | "main" | "transition">("warmup");
+const isWarmupPhase = computed(() => currentPhase.value === "warmup");
+const isTransitionPhase = computed(() => currentPhase.value === "transition");
 
 // Séquence active (échauffement ou séquence principale)
 const activeSequence = computed(() => {
-  if (currentPhase.value === 'warmup' && props.warmupSequence) {
+  if (currentPhase.value === "warmup" && props.warmupSequence) {
     return props.warmupSequence;
   }
   return props.sequence;
@@ -228,9 +291,9 @@ const activeSequence = computed(() => {
 // Initialiser la phase au montage
 onMounted(() => {
   if (props.warmupSequence) {
-    currentPhase.value = 'warmup';
+    currentPhase.value = "warmup";
   } else {
-    currentPhase.value = 'main';
+    currentPhase.value = "main";
   }
 });
 
@@ -249,44 +312,50 @@ const timerId = ref<ReturnType<typeof setInterval> | null>(null);
 const isBreak = ref(false);
 const breakTotalDuration = ref(0);
 const currentCycle = ref(1);
-const cycleRepetitions = computed(() => activeSequence.value.cycleRepetitions || 1);
+const cycleRepetitions = computed(
+  () => activeSequence.value.cycleRepetitions || 1
+);
 
 // État du compte à rebours
 const isCountdown = ref(false);
-const countdownValue = ref(5);
+const countdownValue = ref(3);
+
+// État de la modal d'arrêt
+const stopModalOpen = ref(false);
+const wasPausedBeforeStop = ref(false);
 
 // Fonction pour démarrer la séquence principale après l'échauffement
 const startMainSequence = () => {
-  currentPhase.value = 'main';
+  currentPhase.value = "main";
   resetWorkout();
   // Le workout se lancera automatiquement via le bouton "Démarrer"
 };
 
 // Récupérer l'état global du son
-const soundEnabled = useState<boolean>('soundEnabled');
+const soundEnabled = useState<boolean>("soundEnabled");
 
 // Initialiser les sons au montage du composant
 onMounted(() => {
   // Créer des AudioContext pour générer des bips
   const audioContext = new AudioContext();
-  
+
   // Fonction pour créer un bip avec une fréquence et durée spécifiques
   const createBeep = (frequency: number, duration: number): Blob => {
     const sampleRate = audioContext.sampleRate;
     const numSamples = Math.floor(sampleRate * duration);
     const audioBuffer = audioContext.createBuffer(1, numSamples, sampleRate);
     const channelData = audioBuffer.getChannelData(0);
-    
+
     for (let i = 0; i < numSamples; i++) {
       const t = i / sampleRate;
       channelData[i] = Math.sin(2 * Math.PI * frequency * t) * 0.3;
     }
-    
+
     // Convertir en WAV
     const wavData = audioBufferToWav(audioBuffer);
-    return new Blob([wavData], { type: 'audio/wav' });
+    return new Blob([wavData], { type: "audio/wav" });
   };
-  
+
   // Fonction helper pour convertir AudioBuffer en WAV
   const audioBufferToWav = (buffer: AudioBuffer): ArrayBuffer => {
     const length = buffer.length * buffer.numberOfChannels * 2;
@@ -295,7 +364,7 @@ onMounted(() => {
     const channels: Float32Array[] = [];
     let offset = 0;
     let pos = 0;
-    
+
     // Écrire l'en-tête WAV
     const setUint16 = (data: number) => {
       view.setUint16(pos, data, true);
@@ -305,7 +374,7 @@ onMounted(() => {
       view.setUint32(pos, data, true);
       pos += 4;
     };
-    
+
     setUint32(0x46464952); // "RIFF"
     setUint32(36 + length); // file length
     setUint32(0x45564157); // "WAVE"
@@ -319,60 +388,64 @@ onMounted(() => {
     setUint16(16);
     setUint32(0x61746164); // "data"
     setUint32(length);
-    
+
     // Écrire les données audio
     for (let i = 0; i < buffer.numberOfChannels; i++) {
       channels.push(buffer.getChannelData(i));
     }
-    
+
     while (pos < result.byteLength) {
       for (let i = 0; i < buffer.numberOfChannels; i++) {
         const sample = Math.max(-1, Math.min(1, channels[i]?.[offset] ?? 0));
-        view.setInt16(pos, sample < 0 ? sample * 0x8000 : sample * 0x7FFF, true);
+        view.setInt16(
+          pos,
+          sample < 0 ? sample * 0x8000 : sample * 0x7fff,
+          true
+        );
         pos += 2;
       }
       offset++;
     }
-    
+
     return result;
   };
-  
+
   // Créer les trois types de bips
   const countdownBeep = createBeep(800, 0.1); // Bip court aigu pour compte à rebours
   const endBeep = createBeep(1200, 0.3); // Bip plus long et plus aigu pour fin
   const startBeep = createBeep(600, 0.2); // Bip moyen grave pour début
-  
+
   beepCountdownAudio.value = new Audio(URL.createObjectURL(countdownBeep));
   beepEndAudio.value = new Audio(URL.createObjectURL(endBeep));
   beepStartAudio.value = new Audio(URL.createObjectURL(startBeep));
 });
 
 // Fonction pour jouer un son
-const playBeep = (type: 'countdown' | 'end' | 'start') => {
+const playBeep = (type: "countdown" | "end" | "start") => {
   // Ne rien faire si le son est désactivé
   if (!soundEnabled.value) return;
-  
+
   try {
     let audio: HTMLAudioElement | null = null;
-    
+
     switch (type) {
-      case 'countdown':
+      case "countdown":
         audio = beepCountdownAudio.value;
         break;
-      case 'end':
+      case "end":
         audio = beepEndAudio.value;
         break;
-      case 'start':
+      case "start":
         audio = beepStartAudio.value;
         break;
     }
-    
+
     if (audio) {
       audio.currentTime = 0;
-      audio.play().catch(err => console.log('Erreur lecture audio:', err));
+      audio.play().catch((err) => console.log("Erreur lecture audio:", err));
     }
   } catch (error) {
-    console.log('Erreur audio:', error);
+    console.log("Erreur audio:", error);
   }
 };
 
@@ -385,7 +458,7 @@ const currentExercise = computed(() => {
 });
 
 const progressPercentage = computed(() => {
-  if (!currentExercise.value || currentExercise.value.type !== 'duration') {
+  if (!currentExercise.value || currentExercise.value.type !== "duration") {
     return 0;
   }
   const totalTime = currentExercise.value.duration || 0;
@@ -394,60 +467,68 @@ const progressPercentage = computed(() => {
 
 const breakProgressPercentage = computed(() => {
   if (breakTotalDuration.value === 0) return 0;
-  return ((breakTotalDuration.value - timeLeft.value) / breakTotalDuration.value) * 100;
+  return (
+    ((breakTotalDuration.value - timeLeft.value) / breakTotalDuration.value) *
+    100
+  );
 });
 
 const timeLeftClass = computed(() => {
   if (timeLeft.value <= 5) {
-    return 'text-red-500 animate-pulse';
+    return "text-red-500 animate-pulse";
   } else if (timeLeft.value <= 10) {
-    return 'text-orange-500';
+    return "text-orange-500";
   }
-  return 'text-blue-500';
+  return "text-blue-500";
 });
 
 const getNextButtonLabel = computed(() => {
   const { t } = useI18n();
-  const isLastExercise = currentExerciseIndex.value >= activeSequence.value.exercises.length - 1;
+  const isLastExercise =
+    currentExerciseIndex.value >= activeSequence.value.exercises.length - 1;
   const hasBreakDuration = (activeSequence.value.breakDuration || 0) > 0;
   const isLastCycle = currentCycle.value >= cycleRepetitions.value;
-  
+
   if (isLastExercise && isLastCycle) {
-    return t('workout.finish');
+    return t("workout.finish");
   } else if (isLastExercise && !isLastCycle) {
-    return `${t('workout.nextCycle')} (${currentCycle.value + 1}/${cycleRepetitions.value})`;
+    return `${t("workout.nextCycle")} (${currentCycle.value + 1}/${
+      cycleRepetitions.value
+    })`;
   } else if (hasBreakDuration) {
-    return `${t('workout.launchBreak')} (${activeSequence.value.breakDuration}s)`;
+    return `${t("workout.launchBreak")} (${
+      activeSequence.value.breakDuration
+    }s)`;
   } else {
-    return t('workout.nextExercise');
+    return t("workout.nextExercise");
   }
 });
 
 // Message d'encouragement aléatoire
 const { t } = useI18n();
-const encouragementMessage = ref('');
+const encouragementMessage = ref("");
 
 // Fonction pour générer un nouveau message d'encouragement
 const updateEncouragementMessage = () => {
   const messages = [
-    t('workout.encouragement1'),
-    t('workout.encouragement2'),
-    t('workout.encouragement3'),
-    t('workout.encouragement4'),
-    t('workout.encouragement5'),
-    t('workout.encouragement6'),
-    t('workout.encouragement7'),
-    t('workout.encouragement8'),
-    t('workout.encouragement9'),
-    t('workout.encouragement10'),
-    t('workout.encouragement11')
+    t("workout.encouragement1"),
+    t("workout.encouragement2"),
+    t("workout.encouragement3"),
+    t("workout.encouragement4"),
+    t("workout.encouragement5"),
+    t("workout.encouragement6"),
+    t("workout.encouragement7"),
+    t("workout.encouragement8"),
+    t("workout.encouragement9"),
+    t("workout.encouragement10"),
+    t("workout.encouragement11"),
   ];
-  
+
   let randomIndex = Math.floor(Math.random() * messages.length);
   if (encouragementMessage.value === messages[randomIndex]) {
-      randomIndex = Math.floor(Math.random() * messages.length);
+    randomIndex = Math.floor(Math.random() * messages.length);
   }
-  encouragementMessage.value = messages[randomIndex] || '';
+  encouragementMessage.value = messages[randomIndex] || "";
 };
 
 // Mettre à jour le message à chaque changement d'exercice
@@ -463,16 +544,14 @@ onMounted(() => {
 // Computed pour l'emoji du compte à rebours
 const countdownEmoji = computed(() => {
   switch (countdownValue.value) {
-    case 5:
-    case 4:
-      return '☝️';
     case 3:
+      return "☝️";
     case 2:
-      return '✌️';
+      return "✌️";
     case 1:
-      return '🤘';
+      return "🤘";
     default:
-      return '🚀';
+      return "🚀";
   }
 });
 
@@ -492,17 +571,16 @@ const startWorkout = () => {
 
 const startCountdown = () => {
   isCountdown.value = true;
-  countdownValue.value = 5;
-  
+  countdownValue.value = 3;
+
   const countdownTimer = setInterval(() => {
     if (countdownValue.value > 1) {
       countdownValue.value--;
-      playBeep('countdown');
+      playBeep("countdown");
     } else {
       clearInterval(countdownTimer);
-      playBeep('start');
       isCountdown.value = false;
-      
+
       // Démarrer le workout
       isRunning.value = true;
       isCompleted.value = false;
@@ -522,6 +600,35 @@ const togglePause = () => {
       timerId.value = null;
     }
   }
+};
+
+// Ouvrir la modal de confirmation d'arrêt
+const openStopModal = () => {
+  // Sauvegarder l'état de pause actuel
+  wasPausedBeforeStop.value = isPaused.value;
+
+  // Si l'entraînement est en cours, le mettre en pause
+  if (isRunning.value) {
+    togglePause();
+  }
+
+  stopModalOpen.value = true;
+};
+
+// Annuler l'arrêt et reprendre l'entraînement
+const cancelStop = () => {
+  stopModalOpen.value = false;
+
+  // Si l'entraînement n'était pas en pause avant, le reprendre
+  if (!wasPausedBeforeStop.value && isPaused.value) {
+    startWorkout();
+  }
+};
+
+// Confirmer l'arrêt de l'entraînement
+const confirmStop = () => {
+  stopModalOpen.value = false;
+  stopWorkout();
 };
 
 const stopWorkout = () => {
@@ -549,11 +656,13 @@ const startCurrentExercise = () => {
   if (!exercise) return;
 
   isBreak.value = false;
-  
-  // Jouer le son de début d'exercice
-  playBeep('start');
-  
-  if (exercise.type === 'duration') {
+
+  // Attendre 400ms avant de jouer le son de début pour éviter la superposition avec le son de fin
+  setTimeout(() => {
+    playBeep("start");
+  }, 400);
+
+  if (exercise.type === "duration") {
     timeLeft.value = exercise.duration || 0;
     startTimer();
   }
@@ -561,9 +670,9 @@ const startCurrentExercise = () => {
 
 const startBreak = (isCycleBreak: boolean = false) => {
   const breakDuration = isCycleBreak
-    ? (activeSequence.value.cycleBreakDuration || 0)
-    : (activeSequence.value.breakDuration || 0);
-    
+    ? activeSequence.value.cycleBreakDuration || 0
+    : activeSequence.value.breakDuration || 0;
+
   if (breakDuration <= 0) {
     // Pas de pause configurée, passer directement à l'exercice suivant
     proceedToNextExercise();
@@ -578,16 +687,17 @@ const startBreak = (isCycleBreak: boolean = false) => {
 
 const proceedToNextExercise = () => {
   currentExerciseIndex.value++;
-  
+
   if (currentExerciseIndex.value >= activeSequence.value.exercises.length) {
     // Fin du cycle actuel, vérifier s'il faut répéter
     if (currentCycle.value < cycleRepetitions.value) {
       // Passer au cycle suivant
       currentCycle.value++;
       currentExerciseIndex.value = 0;
-      
+
       // Ajouter une pause entre les cycles si configurée
-      const hasCycleBreakDuration = (activeSequence.value.cycleBreakDuration || 0) > 0;
+      const hasCycleBreakDuration =
+        (activeSequence.value.cycleBreakDuration || 0) > 0;
       if (hasCycleBreakDuration) {
         startBreak(true);
       } else {
@@ -597,13 +707,13 @@ const proceedToNextExercise = () => {
       // Tous les cycles terminés
       isRunning.value = false;
       isCompleted.value = true;
-      
+
       // Si on termine l'échauffement, passer à la transition
       if (isWarmupPhase.value) {
-        currentPhase.value = 'transition';
-        emit('warmupComplete');
+        currentPhase.value = "transition";
+        emit("warmupComplete");
       } else {
-        emit('complete');
+        emit("complete");
       }
     }
   } else {
@@ -616,25 +726,25 @@ const startTimer = () => {
   if (timerId.value) {
     clearInterval(timerId.value);
   }
-  
+
   timerId.value = setInterval(() => {
     timeLeft.value--;
-    
+
     // Jouer un bip pour les 3 dernières secondes (sauf pour les pauses)
     if (!isBreak.value && timeLeft.value > 0 && timeLeft.value <= 3) {
-      playBeep('countdown');
+      playBeep("countdown");
     }
-    
+
     if (timeLeft.value <= 0) {
       clearInterval(timerId.value!);
       timerId.value = null;
-      
+
       if (isBreak.value) {
-        // Fin de la pause, passer à l'exercice suivant
-        proceedToNextExercise();
+        // Fin de la pause, démarrer l'exercice actuel (sans incrémenter)
+        startCurrentExercise();
       } else {
         // Fin de l'exercice, jouer le son de fin puis gérer la transition
-        playBeep('end');
+        playBeep("end");
         nextExercise();
       }
     }
@@ -648,11 +758,13 @@ const nextExercise = () => {
   }
 
   // Vérifier si on doit ajouter une pause
-  const isLastExercise = currentExerciseIndex.value >= activeSequence.value.exercises.length - 1;
+  const isLastExercise =
+    currentExerciseIndex.value >= activeSequence.value.exercises.length - 1;
   const hasBreakDuration = (activeSequence.value.breakDuration || 0) > 0;
-  
+
   if (!isLastExercise && hasBreakDuration) {
-    // Pas le dernier exercice et pause configurée : démarrer la pause
+    // Pas le dernier exercice et pause configurée : incrémenter puis démarrer la pause
+    currentExerciseIndex.value++;
     startBreak();
   } else {
     // Dernier exercice ou pas de pause : passer directement au suivant
@@ -662,35 +774,35 @@ const nextExercise = () => {
 
 const getExerciseStatusClass = (index: number) => {
   if (index < currentExerciseIndex.value) {
-    return 'bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-700';
+    return "bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-700";
   } else if (index === currentExerciseIndex.value && isRunning.value) {
-    return 'bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700';
+    return "bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700";
   }
-  return 'bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600';
+  return "bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600";
 };
 
 const getExerciseStatusIcon = (index: number) => {
   if (index < currentExerciseIndex.value) {
-    return 'i-heroicons-check-circle';
+    return "i-heroicons-check-circle";
   } else if (index === currentExerciseIndex.value && isRunning.value) {
-    return 'i-heroicons-play-circle';
+    return "i-heroicons-play-circle";
   }
-  return 'i-heroicons-clock';
+  return "i-heroicons-clock";
 };
 
 const getExerciseStatusIconClass = (index: number) => {
   if (index < currentExerciseIndex.value) {
-    return 'text-green-500';
+    return "text-green-500";
   } else if (index === currentExerciseIndex.value && isRunning.value) {
-    return 'text-blue-500';
+    return "text-blue-500";
   }
-  return 'text-gray-400';
+  return "text-gray-400";
 };
 
 const formatTime = (seconds: number): string => {
   const mins = Math.floor(seconds / 60);
   const secs = seconds % 60;
-  return `${mins}:${secs.toString().padStart(2, '0')}`;
+  return `${mins}:${secs.toString().padStart(2, "0")}`;
 };
 
 // Nettoyage
