@@ -209,6 +209,7 @@
     "cancel": "Annuler",
     "soundOn": "Activer le son",
     "soundOff": "Désactiver le son",
+    "volumeControl": "Contrôle du volume",
     "lightMode": "Mode clair",
     "darkMode": "Mode sombre"
   },

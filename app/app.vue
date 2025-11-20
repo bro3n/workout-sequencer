@@ -41,20 +41,22 @@
               @update:model-value="updateLocale"
             />
 
-            <!-- Bouton de contrôle du son -->
-            <UButton
-              :icon="
-                soundEnabled
-                  ? 'i-heroicons-speaker-wave'
-                  : 'i-heroicons-speaker-x-mark'
-              "
-              :color="soundEnabled ? 'primary' : 'neutral'"
-              :title="
-                soundEnabled ? $t('common.soundOff') : $t('common.soundOn')
-              "
-              variant="ghost"
-              @click="toggleSound"
-            />
+            <!-- Contrôle du volume -->
+            <div class="flex items-center gap-2 min-w-[150px]">
+              <UIcon
+                :name="volumeLevel === 0 ? 'i-heroicons-speaker-x-mark' : 'i-heroicons-speaker-wave'"
+                class="w-5 h-5 text-gray-600 dark:text-gray-300"
+              />
+              <input
+                type="range"
+                min="0"
+                max="100"
+                :value="volumeLevel"
+                @input="updateVolume"
+                class="flex-1 h-2 bg-gray-200 dark:bg-gray-700 rounded-lg appearance-none cursor-pointer accent-blue-600"
+                :title="$t('common.volumeControl')"
+              />
+            </div>
 
             <!-- Bouton de basculement dark/light mode -->
             <UButton
@@ -70,8 +72,8 @@
             :locale-options="localeOptions"
             :current-locale-option="currentLocaleOption"
             :update-locale="updateLocale"
-            :sound-enabled="soundEnabled"
-            :toggle-sound="toggleSound"
+            :volume-level="volumeLevel"
+            :update-volume="updateVolume"
             :is-dark="isDark"
             :toggle-dark="toggleDark"
           />
@@ -152,9 +154,12 @@ const toggleDark = () => {
 
 // Gestion du son global
 const soundEnabled = useState("soundEnabled", () => true);
+const volumeLevel = useState("volumeLevel", () => 100);
 
-const toggleSound = () => {
-  soundEnabled.value = !soundEnabled.value;
+const updateVolume = (event: Event) => {
+  const target = event.target as HTMLInputElement;
+  volumeLevel.value = parseInt(target.value);
+  soundEnabled.value = volumeLevel.value > 0;
 };
 
 // Gestion de l'import depuis URL

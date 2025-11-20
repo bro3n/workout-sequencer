@@ -432,6 +432,9 @@ onMounted(() => {
   beepStartAudio.value = new Audio(URL.createObjectURL(startBeep));
 });
 
+// Récupérer le niveau de volume global
+const volumeLevel = useState<number>("volumeLevel");
+
 // Fonction pour jouer un son
 const playBeep = (type: "countdown" | "end" | "start") => {
   // Ne rien faire si le son est désactivé
@@ -454,6 +457,8 @@ const playBeep = (type: "countdown" | "end" | "start") => {
 
     if (audio) {
       audio.currentTime = 0;
+      // Appliquer le niveau de volume (0-100 converti en 0-1)
+      audio.volume = (volumeLevel.value || 100) / 100;
       audio.play().catch((err) => console.log("Erreur lecture audio:", err));
     }
   } catch (error) {
@@ -659,10 +664,14 @@ const confirmStop = () => {
 const stopWorkout = () => {
   isRunning.value = false;
   isPaused.value = false;
+  currentExerciseIndex.value = 0;
   if (timerId.value) {
     clearInterval(timerId.value);
     timerId.value = null;
   }
+  // Réinitialiser l'état de pause pour éviter d'afficher les infos de pause
+  isBreak.value = false;
+  breakTotalDuration.value = 0;
 };
 
 const resetWorkout = () => {

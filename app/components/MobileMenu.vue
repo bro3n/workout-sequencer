@@ -90,25 +90,24 @@
             />
           </div>
 
-          <!-- Boutons de contrôle -->
-          <div class="flex justify-around items-center pt-2">
-            <!-- Bouton de contrôle du son -->
-            <UButton
-              :icon="
-                soundEnabled
-                  ? 'i-heroicons-speaker-wave'
-                  : 'i-heroicons-speaker-x-mark'
-              "
-              :color="soundEnabled ? 'primary' : 'neutral'"
-              :title="
-                soundEnabled ? $t('common.soundOff') : $t('common.soundOn')
-              "
-              variant="ghost"
-              size="lg"
-              @click="toggleSound"
+          <!-- Contrôle du volume -->
+          <div class="flex items-center gap-3 pt-2">
+            <UIcon
+              :name="volumeLevel === 0 ? 'i-heroicons-speaker-x-mark' : 'i-heroicons-speaker-wave'"
+              class="w-5 h-5 text-gray-600 dark:text-gray-300"
             />
+            <input
+              type="range"
+              min="0"
+              max="100"
+              :value="volumeLevel"
+              @input="updateVolume"
+              class="flex-1 h-2 bg-gray-200 dark:bg-gray-700 rounded-lg appearance-none cursor-pointer accent-blue-600"
+            />
+          </div>
 
-            <!-- Bouton de basculement dark/light mode -->
+          <!-- Bouton de basculement dark/light mode -->
+          <div class="flex justify-center pt-2">
             <UButton
               :icon="isDark ? 'i-heroicons-sun' : 'i-heroicons-moon'"
               :title="isDark ? $t('common.lightMode') : $t('common.darkMode')"
@@ -125,12 +124,12 @@
 
 <script setup lang="ts">
 // Props
-const props = defineProps<{
+defineProps<{
   localeOptions: { label: string; value: string }[];
   currentLocaleOption?: { label: string; value: string };
   updateLocale: (option: { label: string; value: string }) => void;
-  soundEnabled: boolean;
-  toggleSound: () => void;
+  volumeLevel: number;
+  updateVolume: (event: Event) => void;
   isDark: boolean;
   toggleDark: () => void;
 }>();
