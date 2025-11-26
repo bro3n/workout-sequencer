@@ -360,7 +360,7 @@ onMounted(() => {
 
     for (let i = 0; i < numSamples; i++) {
       const t = i / sampleRate;
-      channelData[i] = Math.sin(2 * Math.PI * frequency * t) * 0.3;
+      channelData[i] = Math.sin(2 * Math.PI * frequency * t) * 1.1;
     }
 
     // Convertir en WAV
