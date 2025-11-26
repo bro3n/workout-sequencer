@@ -44,25 +44,19 @@
     </div>
 
     <!-- Actions globales -->
-    <div class="flex flex-col gap-3 mb-6">
-      <!-- Première ligne : Import et Export -->
-      <div class="flex gap-3">
-        <UButton @click="openImportModal" icon="i-heroicons-arrow-down-tray" variant="outline" size="sm" class="flex-1">
-          {{ $t('sequences.import') }}
-        </UButton>
-        <UButton @click="exportAll" icon="i-heroicons-arrow-up-tray" variant="outline" size="sm" class="flex-1" :disabled="filteredSequences.length === 0">
-          {{ $t('sequences.exportAll') }}
-        </UButton>
-      </div>
-      <!-- Deuxième ligne : Delete All et New Sequence -->
-      <div class="flex gap-3">
-        <UButton @click="openDeleteAllModal" color="error" variant="outline" size="sm" class="flex-1" :disabled="filteredSequences.length === 0">
-          {{ $t('sequences.deleteAll') }}
-        </UButton>
-        <UButton to="/create-sequence" icon="i-heroicons-plus" size="sm" class="flex-1">
-          {{ $t('sequences.newSequence') }}
-        </UButton>
-      </div>
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
+      <UButton @click="openImportModal" icon="i-heroicons-arrow-down-tray" variant="outline" size="sm">
+        {{ $t('sequences.import') }}
+      </UButton>
+      <UButton @click="exportAll" icon="i-heroicons-arrow-up-tray" variant="outline" size="sm" :disabled="filteredSequences.length === 0">
+        {{ $t('sequences.exportAll') }}
+      </UButton>
+      <UButton @click="openDeleteAllModal" color="error" variant="outline" size="sm" :disabled="filteredSequences.length === 0">
+        {{ $t('sequences.deleteAll') }}
+      </UButton>
+      <UButton to="/create-sequence" icon="i-heroicons-plus" size="sm">
+        {{ $t('sequences.newSequence') }}
+      </UButton>
     </div>
 
     <!-- Liste des séquences -->

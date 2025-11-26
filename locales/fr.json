@@ -96,7 +96,8 @@
     "importMultipleSuccess": "{count} séquence(s) importée(s) avec succès !",
     "importError": "Erreur lors de l'import de la séquence.",
     "invalidFileFormat": "Format de fichier invalide. Veuillez sélectionner un fichier JSON valide.",
-    "invalidSequenceData": "Les données de la séquence sont invalides."
+    "invalidSequenceData": "Les données de la séquence sont invalides.",
+    "showDates": "Afficher les dates"
   },
   "createSequence": {
     "title": "Créer une séquence de workout",
