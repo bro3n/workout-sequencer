@@ -78,12 +78,6 @@
               <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
                 {{ sequence.name }}
               </h3>
-              <span
-                v-if="sequence.type === 'warmup'"
-                class="px-2 py-1 text-xs font-medium rounded-full bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200"
-              >
-                {{ $t('sequences.warmupBadge') }}
-              </span>
               <UButton
                 color="neutral"
                 variant="ghost"
