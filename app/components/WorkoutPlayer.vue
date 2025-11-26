@@ -29,7 +29,7 @@
         </UBadge>
         <h2 class="text-2xl font-bold text-white">{{ activeSequence.name }}</h2>
       </div>
-      <div class="flex justify-between items-center">
+      <div class="space-y-3">
         <div v-if="!isCompleted" class="text-gray-600 dark:text-gray-300">
           <span
             >{{ $t("sequences.exercisesList") }}
@@ -41,7 +41,7 @@
             {{ cycleRepetitions }})
           </span>
         </div>
-        <div v-if="!isCompleted && !isCountdown" class="flex gap-2">
+        <div v-if="!isCompleted && !isCountdown" class="flex gap-2 justify-end">
           <UButton
             v-if="!isRunning"
             @click="startWorkout"
