@@ -147,7 +147,9 @@
     "minOneExercise": "You must add at least one exercise",
     "exerciseType": "Type",
     "exerciseTypeRepetitions": "Repetitions",
-    "exerciseTypeDuration": "Duration"
+    "exerciseTypeDuration": "Duration",
+    "moveUp": "Move up",
+    "moveDown": "Move down"
   },
   "workout": {
     "selectWarmup": "Select a warmup",

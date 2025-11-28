@@ -125,12 +125,37 @@
             :key="index"
             class="flex flex-col sm:flex-row sm:items-center gap-3 p-4 border border-gray-200 dark:border-gray-600 rounded-lg"
           >
+            <!-- Boutons de réorganisation -->
+            <div class="flex sm:flex-col gap-1 self-center">
+              <UButton
+                color="neutral"
+                variant="ghost"
+                icon="i-heroicons-chevron-up"
+                size="sm"
+                :disabled="index === 0"
+                @click="moveExerciseUp(index)"
+                :title="$t('sequenceForm.moveUp')"
+              />
+              <UButton
+                color="neutral"
+                variant="ghost"
+                icon="i-heroicons-chevron-down"
+                size="sm"
+                :disabled="index === exercises.length - 1"
+                @click="moveExerciseDown(index)"
+                :title="$t('sequenceForm.moveDown')"
+              />
+            </div>
+            
+            <!-- Formulaire d'exercice -->
             <div class="flex-1">
               <ExerciseForm
                 :exercise="exercise"
                 @update="updateExercise(index, $event)"
               />
             </div>
+            
+            <!-- Bouton de suppression -->
             <UButton
               color="error"
               variant="ghost"
@@ -252,6 +277,27 @@ const updateExercise = (index: number, updatedExercise: CreateExercise) => {
   const value = updatedExercise.type === 'repetitions' ? updatedExercise.repetitions : updatedExercise.duration;
   console.info(`updateExercise (${index}): ${updatedExercise.name}, ${updatedExercise.type}: ${value}`);
   exercises.value[index] = updatedExercise;
+};
+
+// Fonctions de déplacement des exercices
+const moveExerciseUp = (index: number) => {
+  if (index > 0) {
+    // Utiliser splice pour échanger les éléments de manière sûre
+    const [movedExercise] = exercises.value.splice(index, 1);
+    if (movedExercise) {
+      exercises.value.splice(index - 1, 0, movedExercise);
+    }
+  }
+};
+
+const moveExerciseDown = (index: number) => {
+  if (index < exercises.value.length - 1) {
+    // Utiliser splice pour échanger les éléments de manière sûre
+    const [movedExercise] = exercises.value.splice(index, 1);
+    if (movedExercise) {
+      exercises.value.splice(index + 1, 0, movedExercise);
+    }
+  }
 };
 
 // Validation
