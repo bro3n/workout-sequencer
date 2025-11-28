@@ -194,9 +194,14 @@
       <p class="text-gray-600 dark:text-gray-300">
         {{ $t("workout.congratulations") }}
       </p>
-      <UButton v-if="!isWarmupPhase" @click="resetWorkout" color="primary">
-        {{ $t("workout.restart") }}
-      </UButton>
+      <div v-if="!isWarmupPhase" class="flex flex-col sm:flex-row gap-3 justify-center">
+        <UButton @click="addOneCycle" color="success" icon="i-heroicons-plus">
+          {{ $t("workout.addOneCycle") }}
+        </UButton>
+        <UButton @click="resetWorkout" color="primary" icon="i-heroicons-arrow-path">
+          {{ $t("workout.restart") }}
+        </UButton>
+      </div>
     </div>
 
     <!-- Liste des exercices avec statut -->
@@ -685,6 +690,17 @@ const resetWorkout = () => {
   breakTotalDuration.value = 0;
 };
 
+// Fonction pour ajouter un cycle supplémentaire
+const addOneCycle = () => {
+  // Réinitialiser l'état de complétion et remettre à zéro l'index
+  isCompleted.value = false;
+  currentExerciseIndex.value = 0;
+  currentCycle.value++;
+  
+  // Démarrer le compte à rebours pour le nouveau cycle
+  startCountdown();
+};
+
 const startCurrentExercise = () => {
   const exercise = currentExercise.value;
   if (!exercise) return;
@@ -741,6 +757,12 @@ const proceedToNextExercise = () => {
       // Tous les cycles terminés
       isRunning.value = false;
       isCompleted.value = true;
+      
+      // Nettoyer le timer pour éviter qu'il continue
+      if (timerId.value) {
+        clearInterval(timerId.value);
+        timerId.value = null;
+      }
 
       // Si on termine l'échauffement, passer à la transition
       if (isWarmupPhase.value) {
