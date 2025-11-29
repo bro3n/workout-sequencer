@@ -117,6 +117,8 @@ const { locale, locales, setLocale } = useI18n();
 const flagMap: Record<string, string> = {
   fr: "🇫🇷",
   en: "🇬🇧",
+  es: "🇪🇸",
+  zh: "🇨🇳",
 };
 
 const localeOptions = computed(() =>
