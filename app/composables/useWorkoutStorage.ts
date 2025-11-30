@@ -192,10 +192,24 @@ export const useWorkoutStorage = () => {
 
   /**
    * Récupère les détails des séquences récemment lancées
+   * Retourne uniquement la dernière occurrence de chaque séquence
    */
   const getRecentLaunches = (): Array<WorkoutLaunch & { sequence: WorkoutSequence | null }> => {
     const launches = getLaunchHistory();
-    return launches.map((launch) => ({
+    
+    // Utiliser un Map pour garder uniquement la dernière occurrence de chaque séquence
+    const uniqueLaunches = new Map<string, WorkoutLaunch>();
+    
+    // Parcourir les lancements (déjà triés du plus récent au plus ancien)
+    launches.forEach((launch) => {
+      // Si la séquence n'est pas encore dans le Map, l'ajouter
+      if (!uniqueLaunches.has(launch.sequenceId)) {
+        uniqueLaunches.set(launch.sequenceId, launch);
+      }
+    });
+    
+    // Convertir le Map en tableau et ajouter les détails de la séquence
+    return Array.from(uniqueLaunches.values()).map((launch) => ({
       ...launch,
       sequence: getSequenceById(launch.sequenceId),
     }));
