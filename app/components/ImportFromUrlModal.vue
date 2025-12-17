@@ -31,7 +31,11 @@ const modalTitle = computed(() => t('sequences.importFromUrlTitle'))
 // Décoder et extraire les noms des séquences
 const parseSequenceData = () => {
   try {
-    const decodedData = atob(props.base64Data)
+    // Décodage compatible UTF-8 (méthode moderne avec TextDecoder)
+    const binaryString = atob(props.base64Data)
+    const uint8Array = Uint8Array.from(binaryString, char => char.charCodeAt(0))
+    const decoder = new TextDecoder()
+    const decodedData = decoder.decode(uint8Array)
     const parsedData = JSON.parse(decodedData)
     
     if (Array.isArray(parsedData)) {
@@ -102,7 +106,11 @@ const handleImport = async () => {
   isLoading.value = true
   
   try {
-    const decodedData = atob(props.base64Data)
+    // Décodage compatible UTF-8 (méthode moderne avec TextDecoder)
+    const binaryString = atob(props.base64Data)
+    const uint8Array = Uint8Array.from(binaryString, char => char.charCodeAt(0))
+    const decoder = new TextDecoder()
+    const decodedData = decoder.decode(uint8Array)
     const parsedData = JSON.parse(decodedData)
     
     let importedCount = 0

@@ -169,9 +169,11 @@ const copyAsUrl = async () => {
       return
     }
 
-    // Convertir en JSON puis en base64
+    // Convertir en JSON puis en base64 (méthode moderne avec TextEncoder)
     const jsonString = JSON.stringify(exportData)
-    const base64 = btoa(unescape(encodeURIComponent(jsonString)))
+    const encoder = new TextEncoder()
+    const uint8Array = encoder.encode(jsonString)
+    const base64 = btoa(String.fromCharCode(...uint8Array))
 
     // Construire l'URL
     const currentUrl = window.location.origin
