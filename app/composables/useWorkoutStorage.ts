@@ -11,8 +11,8 @@ export const useWorkoutStorage = () => {
   /**
    * Récupère toutes les séquences depuis le localStorage
    */
-  const getSequences = (type?: 'workout' | 'warmup'): WorkoutSequence[] => {
-    if (typeof window === 'undefined' || !window.localStorage) return [];
+  const getSequences = (type?: "workout" | "warmup"): WorkoutSequence[] => {
+    if (typeof window === "undefined" || !window.localStorage) return [];
 
     try {
       const stored = localStorage.getItem(STORAGE_KEY);
@@ -22,16 +22,16 @@ export const useWorkoutStorage = () => {
       // Reconvertir les dates depuis les strings
       const allSequences = sequences.map((seq) => ({
         ...seq,
-        type: seq.type || 'workout', // Par défaut, les anciennes séquences sont de type 'workout'
+        type: seq.type || "workout", // Par défaut, les anciennes séquences sont de type 'workout'
         createdAt: new Date(seq.createdAt),
         updatedAt: new Date(seq.updatedAt),
       }));
-      
+
       // Filtrer par type si spécifié
       if (type) {
         return allSequences.filter((seq) => seq.type === type);
       }
-      
+
       return allSequences;
     } catch (error) {
       console.error("Erreur lors de la récupération des séquences:", error);
@@ -43,7 +43,7 @@ export const useWorkoutStorage = () => {
    * Sauvegarde une nouvelle séquence dans le localStorage
    */
   const saveSequence = (sequence: WorkoutSequence): boolean => {
-    if (typeof window === 'undefined' || !window.localStorage) return false;
+    if (typeof window === "undefined" || !window.localStorage) return false;
 
     try {
       const existingSequences = getSequences();
@@ -61,7 +61,7 @@ export const useWorkoutStorage = () => {
    * Met à jour une séquence existante
    */
   const updateSequence = (updatedSequence: WorkoutSequence): boolean => {
-    if (typeof window === 'undefined' || !window.localStorage) return false;
+    if (typeof window === "undefined" || !window.localStorage) return false;
 
     try {
       const sequences = getSequences();
@@ -86,7 +86,7 @@ export const useWorkoutStorage = () => {
    * Supprime une séquence par son ID
    */
   const deleteSequence = (id: string): boolean => {
-    if (typeof window === 'undefined' || !window.localStorage) return false;
+    if (typeof window === "undefined" || !window.localStorage) return false;
 
     try {
       const sequences = getSequences();
@@ -112,16 +112,13 @@ export const useWorkoutStorage = () => {
    * Vide complètement le localStorage des séquences
    */
   const clearAllSequences = (): boolean => {
-    if (typeof window === 'undefined' || !window.localStorage) return false;
+    if (typeof window === "undefined" || !window.localStorage) return false;
 
     try {
       localStorage.removeItem(STORAGE_KEY);
       return true;
     } catch (error) {
-      console.error(
-        "Erreur lors de la suppression de toutes les séquences:",
-        error
-      );
+      console.error("Erreur lors de la suppression de toutes les séquences:", error);
       return false;
     }
   };
@@ -130,21 +127,21 @@ export const useWorkoutStorage = () => {
    * Récupère uniquement les séquences de type workout (normales)
    */
   const getWorkoutSequences = (): WorkoutSequence[] => {
-    return getSequences('workout');
+    return getSequences("workout");
   };
 
   /**
    * Récupère uniquement les séquences de type warmup (échauffements)
    */
   const getWarmupSequences = (): WorkoutSequence[] => {
-    return getSequences('warmup');
+    return getSequences("warmup");
   };
 
   /**
    * Enregistre un lancement de séquence dans l'historique
    */
   const recordLaunch = (sequenceId: string, sequenceName: string): boolean => {
-    if (typeof window === 'undefined' || !window.localStorage) return false;
+    if (typeof window === "undefined" || !window.localStorage) return false;
 
     try {
       const launches = getLaunchHistory();
@@ -172,7 +169,7 @@ export const useWorkoutStorage = () => {
    * Récupère l'historique des lancements
    */
   const getLaunchHistory = (): WorkoutLaunch[] => {
-    if (typeof window === 'undefined' || !window.localStorage) return [];
+    if (typeof window === "undefined" || !window.localStorage) return [];
 
     try {
       const stored = localStorage.getItem(LAUNCH_HISTORY_KEY);
@@ -196,10 +193,10 @@ export const useWorkoutStorage = () => {
    */
   const getRecentLaunches = (): Array<WorkoutLaunch & { sequence: WorkoutSequence | null }> => {
     const launches = getLaunchHistory();
-    
+
     // Utiliser un Map pour garder uniquement la dernière occurrence de chaque séquence
     const uniqueLaunches = new Map<string, WorkoutLaunch>();
-    
+
     // Parcourir les lancements (déjà triés du plus récent au plus ancien)
     launches.forEach((launch) => {
       // Si la séquence n'est pas encore dans le Map, l'ajouter
@@ -207,7 +204,7 @@ export const useWorkoutStorage = () => {
         uniqueLaunches.set(launch.sequenceId, launch);
       }
     });
-    
+
     // Convertir le Map en tableau et ajouter les détails de la séquence
     return Array.from(uniqueLaunches.values()).map((launch) => ({
       ...launch,

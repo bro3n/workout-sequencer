@@ -7,7 +7,7 @@
           for="sequenceName"
           class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
         >
-          {{ $t('sequenceForm.name') }}
+          {{ $t("sequenceForm.name") }}
         </label>
         <UInput
           id="sequenceName"
@@ -28,7 +28,7 @@
           for="sequenceType"
           class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
         >
-          {{ $t('sequenceForm.type') }}
+          {{ $t("sequenceForm.type") }}
         </label>
         <USelectMenu
           id="sequenceType"
@@ -38,7 +38,7 @@
           class="w-full"
         />
         <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
-          {{ $t('sequenceForm.typeHelp') }}
+          {{ $t("sequenceForm.typeHelp") }}
         </p>
       </div>
 
@@ -48,7 +48,7 @@
           for="breakDuration"
           class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
         >
-          {{ $t('sequenceForm.breakDuration') }}
+          {{ $t("sequenceForm.breakDuration") }}
         </label>
         <UInputNumber
           id="breakDuration"
@@ -58,7 +58,7 @@
           class="w-full"
         />
         <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
-          {{ $t('sequenceForm.breakDurationHelp') }}
+          {{ $t("sequenceForm.breakDurationHelp") }}
         </p>
       </div>
 
@@ -68,7 +68,7 @@
           for="cycleRepetitions"
           class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
         >
-          {{ $t('sequenceForm.cycleRepetitions') }}
+          {{ $t("sequenceForm.cycleRepetitions") }}
         </label>
         <UInputNumber
           id="cycleRepetitions"
@@ -78,7 +78,7 @@
           class="w-full"
         />
         <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
-          {{ $t('sequenceForm.cycleRepetitionsHelp') }}
+          {{ $t("sequenceForm.cycleRepetitionsHelp") }}
         </p>
       </div>
 
@@ -88,7 +88,7 @@
           for="cycleBreakDuration"
           class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
         >
-          {{ $t('sequenceForm.cycleBreakDuration') }}
+          {{ $t("sequenceForm.cycleBreakDuration") }}
         </label>
         <UInputNumber
           id="cycleBreakDuration"
@@ -98,7 +98,7 @@
           class="w-full"
         />
         <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
-          {{ $t('sequenceForm.cycleBreakDurationHelp') }}
+          {{ $t("sequenceForm.cycleBreakDurationHelp") }}
         </p>
       </div>
 
@@ -106,15 +106,10 @@
       <div>
         <div class="flex justify-between items-center mb-4">
           <h3 class="text-lg font-medium text-gray-900 dark:text-white">
-            {{ $t('sequenceForm.exercises') }} ({{ exercises.length }})
+            {{ $t("sequenceForm.exercises") }} ({{ exercises.length }})
           </h3>
-          <UButton
-            icon="i-heroicons-plus"
-            size="sm"
-            color="primary"
-            @click="addExercise"
-          >
-            {{ $t('sequenceForm.addExercise') }}
+          <UButton icon="i-heroicons-plus" size="sm" color="primary" @click="addExercise">
+            {{ $t("sequenceForm.addExercise") }}
           </UButton>
         </div>
 
@@ -133,8 +128,8 @@
                 icon="i-heroicons-chevron-up"
                 size="sm"
                 :disabled="index === 0"
-                @click="moveExerciseUp(index)"
                 :title="$t('sequenceForm.moveUp')"
+                @click="moveExerciseUp(index)"
               />
               <UButton
                 color="neutral"
@@ -142,19 +137,16 @@
                 icon="i-heroicons-chevron-down"
                 size="sm"
                 :disabled="index === exercises.length - 1"
-                @click="moveExerciseDown(index)"
                 :title="$t('sequenceForm.moveDown')"
+                @click="moveExerciseDown(index)"
               />
             </div>
-            
+
             <!-- Formulaire d'exercice -->
             <div class="flex-1">
-              <ExerciseForm
-                :exercise="exercise"
-                @update="updateExercise(index, $event)"
-              />
+              <ExerciseForm :exercise="exercise" @update="updateExercise(index, $event)" />
             </div>
-            
+
             <!-- Bouton de suppression -->
             <UButton
               color="error"
@@ -170,25 +162,18 @@
         <!-- Message si aucun exercice -->
         <div v-else class="text-center py-8 text-gray-500 dark:text-gray-400">
           <p>
-            {{ $t('sequenceForm.noExercises') }}
+            {{ $t("sequenceForm.noExercises") }}
           </p>
         </div>
       </div>
 
       <!-- Boutons d'action -->
-      <div
-        class="flex justify-end gap-3 pt-4 border-t border-gray-200 dark:border-gray-600"
-      >
-        <UButton
-          type="button"
-          color="neutral"
-          variant="ghost"
-          @click="resetForm"
-        >
-          {{ $t('sequenceForm.reset') }}
+      <div class="flex justify-end gap-3 pt-4 border-t border-gray-200 dark:border-gray-600">
+        <UButton type="button" color="neutral" variant="ghost" @click="resetForm">
+          {{ $t("sequenceForm.reset") }}
         </UButton>
         <UButton type="submit" :disabled="!canSubmit" :loading="isSubmitting">
-          {{ isEditMode ? $t('sequenceForm.update') : $t('sequenceForm.save') }}
+          {{ isEditMode ? $t("sequenceForm.update") : $t("sequenceForm.save") }}
         </UButton>
       </div>
     </form>
@@ -217,13 +202,17 @@ const { t } = useI18n();
 
 // Options pour le type de séquence
 const sequenceTypeOptions = computed(() => [
-  t('sequenceForm.typeWorkout'),
-  t('sequenceForm.typeWarmup')
+  t("sequenceForm.typeWorkout"),
+  t("sequenceForm.typeWarmup"),
 ]);
 
 // État réactif
 const sequenceName = ref(props.initialData?.name || "");
-const sequenceType = ref(props.initialData?.type === "warmup" ? t('sequenceForm.typeWarmup') : t('sequenceForm.typeWorkout'));
+const sequenceType = ref(
+  props.initialData?.type === "warmup"
+    ? t("sequenceForm.typeWarmup")
+    : t("sequenceForm.typeWorkout"),
+);
 const exercises = ref<CreateExercise[]>(props.initialData?.exercises || []);
 const breakDuration = ref(props.initialData?.breakDuration || 5);
 const cycleBreakDuration = ref(props.initialData?.cycleBreakDuration || 10);
@@ -240,17 +229,17 @@ const validateSequenceName = (name: string): boolean => {
     nameError.value = "";
     return true;
   }
-  
+
   const existingSequences = getSequences();
   const duplicateName = existingSequences.find(
-    (seq) => seq.name.toLowerCase() === name.toLowerCase() && seq.id !== props.currentSequenceId
+    (seq) => seq.name.toLowerCase() === name.toLowerCase() && seq.id !== props.currentSequenceId,
   );
-  
+
   if (duplicateName) {
-    nameError.value = t('sequenceForm.nameError');
+    nameError.value = t("sequenceForm.nameError");
     return false;
   }
-  
+
   nameError.value = "";
   return true;
 };
@@ -274,8 +263,11 @@ const removeExercise = (index: number) => {
 };
 
 const updateExercise = (index: number, updatedExercise: CreateExercise) => {
-  const value = updatedExercise.type === 'repetitions' ? updatedExercise.repetitions : updatedExercise.duration;
-  console.info(`updateExercise (${index}): ${updatedExercise.name}, ${updatedExercise.type}: ${value}`);
+  const value =
+    updatedExercise.type === "repetitions" ? updatedExercise.repetitions : updatedExercise.duration;
+  console.info(
+    `updateExercise (${index}): ${updatedExercise.name}, ${updatedExercise.type}: ${value}`,
+  );
   exercises.value[index] = updatedExercise;
 };
 
@@ -306,21 +298,22 @@ const canSubmit = computed(() => {
   const noNameError = !nameError.value;
   const hasExercises = exercises.value.length > 0;
   const exercisesValid = exercises.value.every((ex) => {
-    const hasValidValue = ex.type === 'repetitions'
-      ? (ex.repetitions && ex.repetitions > 0)
-      : (ex.duration && ex.duration > 0);
+    const hasValidValue =
+      ex.type === "repetitions"
+        ? ex.repetitions && ex.repetitions > 0
+        : ex.duration && ex.duration > 0;
     return ex.name.trim() !== "" && hasValidValue;
   });
-  
+
   console.log("canSubmit validation:", {
     hasName,
     noNameError,
     hasExercises,
     exercisesValid,
     nameError: nameError.value,
-    isEditMode: isEditMode.value
+    isEditMode: isEditMode.value,
   });
-  
+
   return hasName && noNameError && hasExercises && exercisesValid;
 });
 
@@ -334,19 +327,19 @@ const submitSequence = async () => {
   try {
     const sequenceData: CreateWorkoutSequence = {
       name: sequenceName.value.trim(),
-      type: sequenceType.value === t('sequenceForm.typeWarmup') ? "warmup" : "workout",
+      type: sequenceType.value === t("sequenceForm.typeWarmup") ? "warmup" : "workout",
       exercises: exercises.value.map((ex) => {
-        const exerciseData: Omit<CreateExercise, 'id'> = {
+        const exerciseData: Omit<CreateExercise, "id"> = {
           name: ex.name.trim(),
           type: ex.type,
         };
-        
-        if (ex.type === 'repetitions') {
+
+        if (ex.type === "repetitions") {
           exerciseData.repetitions = ex.repetitions;
         } else {
           exerciseData.duration = ex.duration;
         }
-        
+
         return exerciseData;
       }),
       breakDuration: breakDuration.value > 0 ? breakDuration.value : undefined,
@@ -354,10 +347,7 @@ const submitSequence = async () => {
       cycleRepetitions: cycleRepetitions.value,
     };
 
-    console.log(
-      "SequenceForm - Émission de l'événement save avec:",
-      sequenceData
-    );
+    console.log("SequenceForm - Émission de l'événement save avec:", sequenceData);
     emit("save", sequenceData);
   } finally {
     isSubmitting.value = false;
@@ -377,7 +367,7 @@ defineExpose({
 // Réinitialisation du formulaire
 const resetForm = () => {
   sequenceName.value = "";
-  sequenceType.value = t('sequenceForm.typeWorkout');
+  sequenceType.value = t("sequenceForm.typeWorkout");
   exercises.value = [];
   breakDuration.value = 0;
   cycleBreakDuration.value = 10;
@@ -392,14 +382,19 @@ onMounted(() => {
 });
 
 // Watcher pour les changements de props
-watch(() => props.initialData, (newData) => {
-  if (newData) {
-    sequenceName.value = newData.name;
-    sequenceType.value = newData.type === "warmup" ? t('sequenceForm.typeWarmup') : t('sequenceForm.typeWorkout');
-    exercises.value = [...newData.exercises];
-    breakDuration.value = newData.breakDuration || 0;
-    cycleBreakDuration.value = newData.cycleBreakDuration || 10;
-    cycleRepetitions.value = newData.cycleRepetitions || 1;
-  }
-}, { deep: true });
+watch(
+  () => props.initialData,
+  (newData) => {
+    if (newData) {
+      sequenceName.value = newData.name;
+      sequenceType.value =
+        newData.type === "warmup" ? t("sequenceForm.typeWarmup") : t("sequenceForm.typeWorkout");
+      exercises.value = [...newData.exercises];
+      breakDuration.value = newData.breakDuration || 0;
+      cycleBreakDuration.value = newData.cycleBreakDuration || 10;
+      cycleRepetitions.value = newData.cycleRepetitions || 1;
+    }
+  },
+  { deep: true },
+);
 </script>

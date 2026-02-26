@@ -11,7 +11,7 @@
           <div class="text-2xl font-bold text-gray-900 dark:text-white">
             {{ $t("nav.title") }}
           </div>
-          
+
           <!-- Navigation desktop -->
           <div class="hidden lg:flex gap-4 items-center">
             <NuxtLink
@@ -44,7 +44,9 @@
             <!-- Contrôle du volume -->
             <div class="flex items-center gap-2 min-w-[150px]">
               <UIcon
-                :name="volumeLevel === 0 ? 'i-heroicons-speaker-x-mark' : 'i-heroicons-speaker-wave'"
+                :name="
+                  volumeLevel === 0 ? 'i-heroicons-speaker-x-mark' : 'i-heroicons-speaker-wave'
+                "
                 class="w-5 h-5 text-gray-600 dark:text-gray-300"
               />
               <input
@@ -52,9 +54,9 @@
                 min="0"
                 max="100"
                 :value="volumeLevel"
-                @input="updateVolume"
                 class="flex-1 h-2 bg-gray-200 dark:bg-gray-700 rounded-lg appearance-none cursor-pointer accent-blue-600"
                 :title="$t('common.volumeControl')"
+                @input="updateVolume"
               />
             </div>
 
@@ -102,7 +104,7 @@
     >
       <div class="container mx-auto px-6 py-4">
         <div class="text-center text-gray-600 dark:text-gray-300">
-          <p>&copy; 2025 {{ $t('footer.copyright') }}</p>
+          <p>&copy; 2025 {{ $t("footer.copyright") }}</p>
         </div>
       </div>
     </footer>
@@ -124,17 +126,16 @@ const flagMap: Record<string, string> = {
 const localeOptions = computed(() =>
   locales.value.map((locale) => {
     const code = typeof locale === "string" ? locale : locale.code;
-    const name =
-      typeof locale === "string" ? locale : locale.name || locale.code;
+    const name = typeof locale === "string" ? locale : locale.name || locale.code;
     return {
       label: `${flagMap[code]} ${name}`,
       value: code,
     };
-  })
+  }),
 );
 
 const currentLocaleOption = computed(() =>
-  localeOptions.value.find((opt) => opt.value === locale.value)
+  localeOptions.value.find((opt) => opt.value === locale.value),
 );
 
 const updateLocale = (option: { label: string; value: string }) => {
@@ -179,7 +180,7 @@ watch(
       showImportModal.value = true;
     }
   },
-  { immediate: true }
+  { immediate: true },
 );
 
 // Gérer l'import réussi

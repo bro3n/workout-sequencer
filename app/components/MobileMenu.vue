@@ -5,8 +5,8 @@
       :icon="isOpen ? 'i-heroicons-x-mark' : 'i-heroicons-bars-3'"
       variant="ghost"
       size="lg"
-      @click="toggleMenu"
       :aria-label="isOpen ? 'Fermer le menu' : 'Ouvrir le menu'"
+      @click="toggleMenu"
     />
 
     <!-- Menu mobile -->
@@ -18,11 +18,7 @@
       leave-from-class="opacity-100"
       leave-to-class="opacity-0"
     >
-      <div
-        v-if="isOpen"
-        class="fixed inset-0 z-40 bg-black/50"
-        @click="closeMenu"
-      />
+      <div v-if="isOpen" class="fixed inset-0 z-40 bg-black/50" @click="closeMenu" />
     </Transition>
 
     <!-- Panneau latéral -->
@@ -39,13 +35,15 @@
         class="fixed top-0 right-0 z-50 h-full w-64 bg-white dark:bg-gray-800 shadow-xl overflow-y-auto"
       >
         <!-- En-tête du menu -->
-        <div class="flex justify-between items-center p-4 border-b border-gray-200 dark:border-gray-700">
+        <div
+          class="flex justify-between items-center p-4 border-b border-gray-200 dark:border-gray-700"
+        >
           <span class="font-semibold text-gray-900 dark:text-white">Menu</span>
           <UButton
             icon="i-heroicons-x-mark"
             variant="ghost"
-            @click="closeMenu"
             aria-label="Fermer le menu"
+            @click="closeMenu"
           />
         </div>
 
@@ -85,8 +83,8 @@
               :model-value="currentLocaleOption"
               :items="localeOptions"
               :search-input="false"
-              @update:model-value="updateLocale"
               class="w-full"
+              @update:model-value="updateLocale"
             />
           </div>
 
@@ -101,8 +99,8 @@
               min="0"
               max="100"
               :value="volumeLevel"
-              @input="updateVolume"
               class="flex-1 h-2 bg-gray-200 dark:bg-gray-700 rounded-lg appearance-none cursor-pointer accent-blue-600"
+              @input="updateVolume"
             />
           </div>
 
@@ -148,21 +146,24 @@ const closeMenu = () => {
 
 // Fermer le menu lors du changement de route
 const route = useRoute();
-watch(() => route.path, () => {
-  closeMenu();
-});
+watch(
+  () => route.path,
+  () => {
+    closeMenu();
+  },
+);
 
 // Empêcher le scroll du body quand le menu est ouvert
 watch(isOpen, (newValue) => {
   if (newValue) {
-    document.body.style.overflow = 'hidden';
+    document.body.style.overflow = "hidden";
   } else {
-    document.body.style.overflow = '';
+    document.body.style.overflow = "";
   }
 });
 
 // Cleanup au démontage
 onUnmounted(() => {
-  document.body.style.overflow = '';
+  document.body.style.overflow = "";
 });
 </script>

@@ -84,13 +84,7 @@
             >
               {{ $t("home.recentWorkouts.restart") }}
             </UButton>
-            <UButton
-              v-else
-              disabled
-              color="neutral"
-              variant="ghost"
-              block
-            >
+            <UButton v-else disabled color="neutral" variant="ghost" block>
               {{ $t("home.recentWorkouts.unavailable") }}
             </UButton>
           </div>
@@ -114,21 +108,21 @@ onMounted(() => {
     recentLaunches.value = getRecentLaunches();
   };
 
-  window.addEventListener('storage', handleStorageChange);
-  
+  window.addEventListener("storage", handleStorageChange);
+
   onUnmounted(() => {
-    window.removeEventListener('storage', handleStorageChange);
+    window.removeEventListener("storage", handleStorageChange);
   });
 });
 
 // Formater la date de lancement
 const formatLaunchDate = (date: Date) => {
   const options: Intl.DateTimeFormatOptions = {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
   };
 
   return new Intl.DateTimeFormat(locale.value, options).format(date);

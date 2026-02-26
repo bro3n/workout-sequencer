@@ -2,10 +2,8 @@
   <div class="flex flex-col sm:flex-row gap-4 sm:items-end">
     <!-- Nom de l'exercice -->
     <div class="flex-1 min-w-0">
-      <label
-        class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-      >
-        {{ $t('sequenceForm.exerciseName') }}
+      <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+        {{ $t("sequenceForm.exerciseName") }}
       </label>
       <UInput
         v-model="exerciseName"
@@ -16,23 +14,16 @@
 
     <!-- Type d'exercice -->
     <div class="w-full sm:w-32">
-      <label
-        class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-      >
-        {{ $t('sequenceForm.exerciseType') }}
+      <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+        {{ $t("sequenceForm.exerciseType") }}
       </label>
-      <USelect
-        v-model="exerciseType"
-        :items="typeOptions"
-      />
+      <USelect v-model="exerciseType" :items="typeOptions" />
     </div>
 
     <!-- Nombre de répétitions -->
     <div v-if="exerciseType === 'repetitions'" class="w-full sm:w-32">
-      <label
-        class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-      >
-        {{ $t('sequenceForm.repetitions') }}
+      <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+        {{ $t("sequenceForm.repetitions") }}
       </label>
       <UInputNumber
         v-model="repetitions"
@@ -45,10 +36,8 @@
 
     <!-- Durée en secondes -->
     <div v-else class="w-full sm:w-32">
-      <label
-        class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-      >
-        {{ $t('sequenceForm.duration') }}
+      <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+        {{ $t("sequenceForm.duration") }}
       </label>
       <UInputNumber
         v-model="duration"
@@ -81,23 +70,27 @@ const { t } = useI18n();
 
 // Options pour le type d'exercice
 const typeOptions = computed(() => [
-  { label: t('sequenceForm.exerciseTypeRepetitions'), value: 'repetitions' },
-  { label: t('sequenceForm.exerciseTypeDuration'), value: 'duration' }
+  { label: t("sequenceForm.exerciseTypeRepetitions"), value: "repetitions" },
+  { label: t("sequenceForm.exerciseTypeDuration"), value: "duration" },
 ]);
 
 // État réactif - Utilisation de toRefs pour une meilleure réactivité
 const exerciseName = ref(props.exercise.name);
-const exerciseType = ref(props.exercise.type || 'repetitions');
+const exerciseType = ref(props.exercise.type || "repetitions");
 const repetitions = ref(props.exercise.repetitions || 5);
 const duration = ref(props.exercise.duration || 20);
 
 // Synchroniser avec les props quand elles changent
-watch(() => props.exercise, (newExercise) => {
-  exerciseName.value = newExercise.name;
-  exerciseType.value = newExercise.type || 'repetitions';
-  repetitions.value = newExercise.repetitions || 5;
-  duration.value = newExercise.duration || 20;
-}, { deep: true });
+watch(
+  () => props.exercise,
+  (newExercise) => {
+    exerciseName.value = newExercise.name;
+    exerciseType.value = newExercise.type || "repetitions";
+    repetitions.value = newExercise.repetitions || 5;
+    duration.value = newExercise.duration || 20;
+  },
+  { deep: true },
+);
 
 // Debug: Watcher pour le type
 watch(exerciseType, (newType, oldType) => {
@@ -118,7 +111,7 @@ watch([exerciseName, exerciseType, repetitions, duration], () => {
       type: exerciseType.value,
     };
 
-    if (exerciseType.value === 'repetitions') {
+    if (exerciseType.value === "repetitions") {
       exerciseData.repetitions = repetitions.value;
     } else {
       exerciseData.duration = duration.value;

@@ -10,12 +10,7 @@
         <p class="text-xl text-gray-300 mb-8">
           {{ $t("workout.readyForMain") }}
         </p>
-        <UButton
-          @click="startMainSequence"
-          color="primary"
-          size="xl"
-          icon="i-heroicons-play"
-        >
+        <UButton color="primary" size="xl" icon="i-heroicons-play" @click="startMainSequence">
           {{ $t("workout.startMainSequence") }}
         </UButton>
       </div>
@@ -32,39 +27,27 @@
       <div class="space-y-3">
         <div v-if="!isCompleted" class="text-gray-600 dark:text-gray-300">
           <span
-            >{{ $t("sequences.exercisesList") }}
-            {{ currentExerciseIndex + 1 }} /
+            >{{ $t("sequences.exercisesList") }} {{ currentExerciseIndex + 1 }} /
             {{ activeSequence.exercises.length }}</span
           >
           <span v-if="cycleRepetitions > 1" class="ml-2">
-            ({{ $t("workout.cycle") }} {{ currentCycle }} /
-            {{ cycleRepetitions }})
+            ({{ $t("workout.cycle") }} {{ currentCycle }} / {{ cycleRepetitions }})
           </span>
         </div>
         <div v-if="!isCompleted && !isCountdown" class="flex gap-2 justify-end">
-          <UButton
-            v-if="!isRunning"
-            @click="startWorkout"
-            color="primary"
-            icon="i-heroicons-play"
-          >
+          <UButton v-if="!isRunning" color="primary" icon="i-heroicons-play" @click="startWorkout">
             {{ isPaused ? $t("workout.resume") : $t("workout.start") }}
           </UButton>
           <template v-else>
             <UButton
-              @click="togglePause"
               color="warning"
               variant="outline"
               icon="i-heroicons-pause"
+              @click="togglePause"
             >
               {{ $t("workout.pause") }}
             </UButton>
-            <UButton
-              @click="openStopModal"
-              color="error"
-              variant="outline"
-              icon="i-heroicons-stop"
-            >
+            <UButton color="error" variant="outline" icon="i-heroicons-stop" @click="openStopModal">
               {{ $t("workout.stop") }}
             </UButton>
           </template>
@@ -124,11 +107,7 @@
     <!-- Exercice actuel -->
     <div
       v-if="
-        currentExercise &&
-        !isBreak &&
-        !isCountdown &&
-        !isTransitionPhase &&
-        (isRunning || isPaused)
+        currentExercise && !isBreak && !isCountdown && !isTransitionPhase && (isRunning || isPaused)
       "
       class="text-center mb-8"
     >
@@ -153,13 +132,7 @@
               : $t("workout.repetition")
           }}
         </div>
-        <UButton
-          v-if="isRunning"
-          @click="nextExercise"
-          color="success"
-          size="xl"
-          class="mt-6"
-        >
+        <UButton v-if="isRunning" color="success" size="xl" class="mt-6" @click="nextExercise">
           {{ getNextButtonLabel }}
         </UButton>
       </div>
@@ -185,20 +158,16 @@
     <div v-if="isCompleted && !isTransitionPhase" class="text-center space-y-4">
       <div class="text-4xl">🎉</div>
       <h3 class="text-2xl font-bold text-green-500">
-        {{
-          isWarmupPhase
-            ? $t("workout.warmupCompleted")
-            : $t("workout.completed")
-        }}
+        {{ isWarmupPhase ? $t("workout.warmupCompleted") : $t("workout.completed") }}
       </h3>
       <p class="text-gray-600 dark:text-gray-300">
         {{ $t("workout.congratulations") }}
       </p>
       <div v-if="!isWarmupPhase" class="flex flex-col sm:flex-row gap-3 justify-center">
-        <UButton @click="addOneCycle" color="success" icon="i-heroicons-plus">
+        <UButton color="success" icon="i-heroicons-plus" @click="addOneCycle">
           {{ $t("workout.addOneCycle") }}
         </UButton>
-        <UButton @click="resetWorkout" color="primary" icon="i-heroicons-arrow-path">
+        <UButton color="primary" icon="i-heroicons-arrow-path" @click="resetWorkout">
           {{ $t("workout.restart") }}
         </UButton>
       </div>
@@ -263,11 +232,7 @@
             variant="outline"
             @click="cancelStop"
           />
-          <UButton
-            :label="$t('workout.stopModalConfirm')"
-            color="error"
-            @click="confirmStop"
-          />
+          <UButton :label="$t('workout.stopModalConfirm')" color="error" @click="confirmStop" />
         </div>
       </template>
     </UModal>
@@ -329,9 +294,7 @@ const timerId = ref<ReturnType<typeof setInterval> | null>(null);
 const isBreak = ref(false);
 const breakTotalDuration = ref(0);
 const currentCycle = ref(1);
-const cycleRepetitions = computed(
-  () => activeSequence.value.cycleRepetitions || 1
-);
+const cycleRepetitions = computed(() => activeSequence.value.cycleRepetitions || 1);
 
 // État du compte à rebours
 const isCountdown = ref(false);
@@ -414,11 +377,7 @@ onMounted(() => {
     while (pos < result.byteLength) {
       for (let i = 0; i < buffer.numberOfChannels; i++) {
         const sample = Math.max(-1, Math.min(1, channels[i]?.[offset] ?? 0));
-        view.setInt16(
-          pos,
-          sample < 0 ? sample * 0x8000 : sample * 0x7fff,
-          true
-        );
+        view.setInt16(pos, sample < 0 ? sample * 0x8000 : sample * 0x7fff, true);
         pos += 2;
       }
       offset++;
@@ -532,10 +491,7 @@ const progressPercentage = computed(() => {
 
 const breakProgressPercentage = computed(() => {
   if (breakTotalDuration.value === 0) return 0;
-  return (
-    ((breakTotalDuration.value - timeLeft.value) / breakTotalDuration.value) *
-    100
-  );
+  return ((breakTotalDuration.value - timeLeft.value) / breakTotalDuration.value) * 100;
 });
 
 // Nom du prochain exercice (pour l'affichage pendant la pause)
@@ -562,21 +518,16 @@ const timeLeftClass = computed(() => {
 
 const getNextButtonLabel = computed(() => {
   const { t } = useI18n();
-  const isLastExercise =
-    currentExerciseIndex.value >= activeSequence.value.exercises.length - 1;
+  const isLastExercise = currentExerciseIndex.value >= activeSequence.value.exercises.length - 1;
   const hasBreakDuration = (activeSequence.value.breakDuration || 0) > 0;
   const isLastCycle = currentCycle.value >= cycleRepetitions.value;
 
   if (isLastExercise && isLastCycle) {
     return t("workout.finish");
   } else if (isLastExercise && !isLastCycle) {
-    return `${t("workout.nextCycle")} (${currentCycle.value + 1}/${
-      cycleRepetitions.value
-    })`;
+    return `${t("workout.nextCycle")} (${currentCycle.value + 1}/${cycleRepetitions.value})`;
   } else if (hasBreakDuration) {
-    return `${t("workout.launchBreak")} (${
-      activeSequence.value.breakDuration
-    }s)`;
+    return `${t("workout.launchBreak")} (${activeSequence.value.breakDuration}s)`;
   } else {
     return t("workout.nextExercise");
   }
@@ -739,7 +690,7 @@ const addOneCycle = () => {
   isCompleted.value = false;
   currentExerciseIndex.value = 0;
   currentCycle.value++;
-  
+
   // Démarrer le compte à rebours pour le nouveau cycle
   startCountdown();
 };
@@ -789,8 +740,7 @@ const proceedToNextExercise = () => {
       currentExerciseIndex.value = 0;
 
       // Ajouter une pause entre les cycles si configurée
-      const hasCycleBreakDuration =
-        (activeSequence.value.cycleBreakDuration || 0) > 0;
+      const hasCycleBreakDuration = (activeSequence.value.cycleBreakDuration || 0) > 0;
       if (hasCycleBreakDuration) {
         startBreak(true);
       } else {
@@ -800,7 +750,7 @@ const proceedToNextExercise = () => {
       // Tous les cycles terminés
       isRunning.value = false;
       isCompleted.value = true;
-      
+
       // Nettoyer le timer pour éviter qu'il continue
       if (timerId.value) {
         clearInterval(timerId.value);
@@ -857,8 +807,7 @@ const nextExercise = () => {
   }
 
   // Vérifier si on doit ajouter une pause
-  const isLastExercise =
-    currentExerciseIndex.value >= activeSequence.value.exercises.length - 1;
+  const isLastExercise = currentExerciseIndex.value >= activeSequence.value.exercises.length - 1;
   const hasBreakDuration = (activeSequence.value.breakDuration || 0) > 0;
 
   if (!isLastExercise && hasBreakDuration) {
