@@ -97,7 +97,8 @@
     "importError": "Error al importar la secuencia.",
     "invalidFileFormat": "Formato de archivo inválido. Por favor, selecciona un archivo JSON válido.",
     "invalidSequenceData": "Los datos de la secuencia son inválidos.",
-    "showDates": "Mostrar fechas"
+    "showDates": "Mostrar fechas",
+    "estimatedTime": "Duración estimada"
   },
   "createSequence": {
     "title": "Crear una secuencia de entrenamiento",

@@ -14,6 +14,7 @@
 - **Design responsive** : Fonctionne parfaitement sur desktop et mobile
 - **Stockage local** : Sauvegarde automatique des workouts dans le navigateur
 - **Workouts récents** : Accès rapide à l'historique des workouts
+- **Estimation de durée** : Calcul automatique du temps estimé pour chaque séquence dans la liste
 
 ## Architecture technique
 
@@ -52,6 +53,7 @@ workout-sequencer/
 │   └── assets/
 │       └── css/
 │           └── main.css
+│   │   └── useSequenceUtils.ts
 ├── locales/                 # Fichiers de traduction i18n
 │   ├── en.json
 │   ├── fr.json
@@ -105,6 +107,7 @@ workout-sequencer/
    - Historique des workouts
    - Accès rapide
    - Actions de suppression/édition
+   - Estimation du temps via `useSequenceUtils`
 
 8. **MobileMenu.vue** : Menu mobile responsive
    - Navigation adaptative
@@ -119,6 +122,12 @@ Gestion du stockage local des workouts :
 - Récupération des workouts sauvegardés
 - Gestion de l'historique
 - Opérations CRUD sur les séquences
+
+#### useSequenceUtils.ts
+Utilitaires partagés pour les séquences :
+- `estimateSequenceDuration(sequence)` : calcule le temps estimé d'une séquence (durée en secondes, répétitions × 2s, pauses entre exercices, pauses entre cycles) et retourne une chaîne formatée (`Xs`, `Xmin` ou `Xmin Ys`)
+- Utilisé dans `sequences.vue` et `RecentWorkouts.vue`
+- Auto-importé par Nuxt (aucun import explicite nécessaire)
 
 ### Types TypeScript
 
@@ -144,6 +153,7 @@ Définitions des types pour :
    - Affichage des séquences sauvegardées
    - Actions d'édition/suppression/lecture
    - Import/Export
+   - Estimation du temps via `useSequenceUtils`
 
 4. **edit-sequence/[id].vue** : Édition d'une séquence existante
    - Chargement de la séquence
@@ -176,6 +186,9 @@ Les traductions couvrent :
 - Messages d'erreur et de validation
 - Instructions du lecteur de workout
 - Boutons et actions
+
+### Règle importante
+Tout texte visible par l'utilisateur doit passer par i18n. Lors de l'ajout d'une nouvelle clé, mettre à jour les **4 fichiers** (`en.json`, `fr.json`, `es.json`, `zh.json`).
 
 ## Gestion de l'état
 

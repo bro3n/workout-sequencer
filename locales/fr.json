@@ -97,7 +97,8 @@
     "importError": "Erreur lors de l'import de la séquence.",
     "invalidFileFormat": "Format de fichier invalide. Veuillez sélectionner un fichier JSON valide.",
     "invalidSequenceData": "Les données de la séquence sont invalides.",
-    "showDates": "Afficher les dates"
+    "showDates": "Afficher les dates",
+    "estimatedTime": "Durée estimée"
   },
   "createSequence": {
     "title": "Créer une séquence de workout",

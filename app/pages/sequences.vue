@@ -134,6 +134,14 @@
                 <UIcon name="i-heroicons-pause-circle" class="w-4 h-4" />
                 <span>{{ $t("sequences.noBreak") }}</span>
               </div>
+
+              <div class="flex items-center gap-2 text-gray-600 dark:text-gray-300">
+                <UIcon name="i-heroicons-clock" class="w-4 h-4" />
+                <span
+                  >{{ $t("sequences.estimatedTime") }} :
+                  {{ estimateSequenceDuration(sequence) }}</span
+                >
+              </div>
             </div>
             <!-- Info box des dates -->
             <div
@@ -527,6 +535,8 @@ const confirmDeleteAll = () => {
     messageType.value = "";
   }, 3000);
 };
+
+const { estimateSequenceDuration } = useSequenceUtils();
 
 // Formater une date
 const formatDate = (date: Date): string => {

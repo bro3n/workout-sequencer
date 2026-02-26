@@ -67,6 +67,14 @@
               {{ $t("sequences.breakBetween") }}
             </span>
           </div>
+
+          <div class="flex items-center gap-2 text-gray-600 dark:text-gray-300">
+            <UIcon name="i-heroicons-clock" class="w-4 h-4" />
+            <span
+              >{{ $t("sequences.estimatedTime") }} :
+              {{ estimateSequenceDuration(launch.sequence) }}</span
+            >
+          </div>
         </div>
 
         <div v-else class="text-sm text-gray-500 dark:text-gray-400 italic">
@@ -97,13 +105,13 @@
 <script setup lang="ts">
 const { locale } = useI18n();
 const { getRecentLaunches } = useWorkoutStorage();
+const { estimateSequenceDuration } = useSequenceUtils();
 
 // Récupérer les lancements récents
 const recentLaunches = ref(getRecentLaunches());
 
 // Rafraîchir les données lorsque la page devient visible
 onMounted(() => {
-  // Écouter les changements dans le localStorage
   const handleStorageChange = () => {
     recentLaunches.value = getRecentLaunches();
   };
