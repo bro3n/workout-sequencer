@@ -440,6 +440,49 @@ onMounted(() => {
 // Récupérer le niveau de volume global
 const volumeLevel = useState<number>("volumeLevel");
 
+// WakeLock pour empêcher la mise en veille de l'écran pendant le workout
+const wakeLockSentinel = ref<WakeLockSentinel | null>(null);
+
+const acquireWakeLock = async () => {
+  if (!("wakeLock" in navigator)) return;
+  try {
+    wakeLockSentinel.value = await navigator.wakeLock.request("screen");
+  } catch {
+    console.debug("");
+  }
+};
+
+const releaseWakeLock = async () => {
+  if (wakeLockSentinel.value) {
+    try {
+      await wakeLockSentinel.value.release();
+    } catch {
+      console.debug("");
+    }
+    wakeLockSentinel.value = null;
+  }
+};
+
+// Acquérir/libérer le WakeLock selon l'état du workout
+watch(isRunning, async (running) => {
+  if (running) {
+    await acquireWakeLock();
+  } else {
+    await releaseWakeLock();
+  }
+});
+
+// Réacquérir le WakeLock si la page redevient visible (il est relâché automatiquement quand la page est cachée)
+const handleVisibilityChange = async () => {
+  if (document.visibilityState === "visible" && isRunning.value) {
+    await acquireWakeLock();
+  }
+};
+
+onMounted(() => {
+  document.addEventListener("visibilitychange", handleVisibilityChange);
+});
+
 // Fonction pour jouer un son
 const playBeep = (type: "countdown" | "end" | "start") => {
   // Ne rien faire si le son est désactivé
@@ -866,5 +909,7 @@ onUnmounted(() => {
   if (timerId.value) {
     clearInterval(timerId.value);
   }
+  document.removeEventListener("visibilitychange", handleVisibilityChange);
+  releaseWakeLock();
 });
 </script>
