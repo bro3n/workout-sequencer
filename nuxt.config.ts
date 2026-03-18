@@ -34,4 +34,25 @@ export default defineNuxtConfig({
     fallback: "dark", // Valeur de secours
     classSuffix: "", // Utiliser 'dark' au lieu de 'dark-mode'
   },
+
+  app: {
+    head: {
+      link: [{ rel: "manifest", href: "/manifest.webmanifest" }],
+      meta: [{ name: "theme-color", content: "#1e293b" }],
+    },
+  },
+
+  hooks: {
+    // Injecte le build ID dans le service worker après génération
+    "nitro:build:public-assets": async (nitro) => {
+      const { join } = await import("path");
+      const { readFileSync, writeFileSync, existsSync } = await import("fs");
+      const swPath = join(nitro.options.output.publicDir, "sw.js");
+      if (existsSync(swPath)) {
+        const buildId = Date.now().toString();
+        const content = readFileSync(swPath, "utf-8");
+        writeFileSync(swPath, content.replace("__BUILD_ID__", buildId));
+      }
+    },
+  },
 });

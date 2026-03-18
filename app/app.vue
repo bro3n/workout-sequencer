@@ -98,6 +98,9 @@
       @close="clearImportParam"
     />
 
+    <!-- Notification de mise à jour PWA -->
+    <PwaUpdateBanner />
+
     <!-- Footer collé en bas -->
     <footer
       class="bg-white dark:bg-gray-800 shadow-sm border-t border-gray-200 dark:border-gray-700 mt-auto"
