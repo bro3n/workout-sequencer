@@ -1,3 +1,4 @@
+/// <reference lib="webworker" />
 const CACHE_VERSION = "__BUILD_ID__";
 const CACHE_NAME = `workout-sequencer-${CACHE_VERSION}`;
 
@@ -5,7 +6,7 @@ const CACHE_NAME = `workout-sequencer-${CACHE_VERSION}`;
 self.addEventListener("install", (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) =>
-      cache.addAll(["/", "/manifest.webmanifest"]),
+      cache.addAll(["/", "/manifest.webmanifest", "/icon-192.png", "/icon-512.png"]),
     ),
   );
   // Ne pas appeler skipWaiting() ici — on laisse le client décider de la mise à jour
